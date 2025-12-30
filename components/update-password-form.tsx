@@ -9,9 +9,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Box, Stack, Text, FormControl, FormErrorMessage } from "@chakra-ui/react";
+import { FormInput } from "@/components/ui/form-input";
+import { Box, Stack, Text } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -59,19 +58,15 @@ export function UpdatePasswordForm(props: React.ComponentPropsWithoutRef<"div">)
         <CardContent>
           <form onSubmit={handleSubmit(onSubmit)}>
             <Stack spacing={6}>
-              <FormControl isInvalid={!!errors.password}>
-                <Label htmlFor="password">New password</Label>
-                <Input
-                  id="password"
-                  type="password"
-                  placeholder="New password"
-                  {...register("password")}
-                  mt={2}
-                />
-                {errors.password && (
-                  <FormErrorMessage>{errors.password.message}</FormErrorMessage>
-                )}
-              </FormControl>
+              <FormInput
+                id="password"
+                label="New password"
+                type="password"
+                placeholder="New password"
+                error={errors.password?.message}
+                showPasswordToggle
+                {...register("password")}
+              />
               {error && (
                 <Text fontSize="sm" color="red.500">
                   {error}

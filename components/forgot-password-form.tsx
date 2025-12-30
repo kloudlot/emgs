@@ -9,9 +9,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Box, Stack, Text, Link as ChakraLink, FormControl, FormErrorMessage } from "@chakra-ui/react";
+import { FormInput } from "@/components/ui/form-input";
+import { Box, Stack, Text, Link as ChakraLink } from "@chakra-ui/react";
 import Link from "next/link";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -76,19 +75,14 @@ export function ForgotPasswordForm(props: React.ComponentPropsWithoutRef<"div">)
           <CardContent>
             <form onSubmit={handleSubmit(onSubmit)}>
               <Stack spacing={6}>
-                <FormControl isInvalid={!!errors.email}>
-                  <Label htmlFor="email">Email</Label>
-                  <Input
-                    id="email"
-                    type="email"
-                    placeholder="m@example.com"
-                    {...register("email")}
-                    mt={2}
-                  />
-                  {errors.email && (
-                    <FormErrorMessage>{errors.email.message}</FormErrorMessage>
-                  )}
-                </FormControl>
+                <FormInput
+                  id="email"
+                  label="Email"
+                  type="email"
+                  placeholder="m@example.com"
+                  error={errors.email?.message}
+                  {...register("email")}
+                />
                 {error && (
                   <Text fontSize="sm" color="red.500">
                     {error}

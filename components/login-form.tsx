@@ -9,16 +9,14 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { FormInput } from "@/components/ui/form-input";
 import {
   Box,
   Stack,
   Text,
   Link as ChakraLink,
-  FormControl,
-  FormErrorMessage,
   VStack,
+  FormLabel,
 } from "@chakra-ui/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -68,24 +66,19 @@ export function LoginForm(props: React.ComponentPropsWithoutRef<"div">) {
         </Box>
         <form onSubmit={handleSubmit(onSubmit)}>
           <Stack spacing={6}>
-            <FormControl isInvalid={!!errors.email}>
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="m@example.com"
-                {...register("email")}
-                mt={2}
-              />
-              {errors.email && (
-                <FormErrorMessage>{errors.email.message}</FormErrorMessage>
-              )}
-            </FormControl>
-            <FormControl isInvalid={!!errors.password}>
+            <FormInput
+              id="email"
+              label="Email"
+              type="email"
+              placeholder="m@example.com"
+              error={errors.email?.message}
+              {...register("email")}
+            />
+            <Box>
               <Box display="flex" alignItems="center" mb={2}>
-                <Label htmlFor="password" mb={0}>
+                <FormLabel htmlFor="password" mb={0}>
                   Password
-                </Label>
+                </FormLabel>
                 <Link href="/auth/forgot-password" passHref legacyBehavior>
                   <ChakraLink
                     as="a"
@@ -97,11 +90,15 @@ export function LoginForm(props: React.ComponentPropsWithoutRef<"div">) {
                   </ChakraLink>
                 </Link>
               </Box>
-              <Input id="password" type="password" {...register("password")} />
-              {errors.password && (
-                <FormErrorMessage>{errors.password.message}</FormErrorMessage>
-              )}
-            </FormControl>
+              <FormInput
+                id="password"
+                type="password"
+                placeholder="Enter your password"
+                error={errors.password?.message}
+                showPasswordToggle
+                {...register("password")}
+              />
+            </Box>
             {error && (
               <Text fontSize="sm" color="red.500">
                 {error}
