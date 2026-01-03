@@ -42,6 +42,18 @@ const theme = extendTheme({
       defaultProps: {
         colorScheme: "brand",
       },
+      baseStyle: {
+        borderRadius: "12px",
+        _hover: {
+          bg: "brand.500",
+          color: "white",
+        },
+      },
+      sizes: {
+        md: {
+          h: "55px",
+        },
+      },
     },
     Input: {
       defaultProps: {

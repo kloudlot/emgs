@@ -3,8 +3,6 @@ import { EnvVarWarning } from "@/components/env-var-warning";
 import { AuthButton } from "@/components/auth-button";
 import { Hero } from "@/components/hero";
 import { ThemeSwitcher } from "@/components/theme-switcher";
-import { ConnectSupabaseSteps } from "@/components/tutorial/connect-supabase-steps";
-import { SignUpUserSteps } from "@/components/tutorial/sign-up-user-steps";
 import { hasEnvVars } from "@/lib/utils";
 import Link from "next/link";
 import { Suspense } from "react";
@@ -18,6 +16,7 @@ import {
   Link as ChakraLink,
   Divider,
 } from "@chakra-ui/react";
+import { Header } from "@/components/header";
 
 export default function Home() {
   return (
@@ -36,7 +35,7 @@ export default function Home() {
           <Container maxW="5xl" w="full" display="flex" justifyContent="space-between" alignItems="center" p={3} px={5}>
             <HStack spacing={5} align="center" fontWeight="semibold" fontSize="sm">
               <Link href="/" passHref >
-                <ChakraLink as="a">Next.js Supabase Starter</ChakraLink>
+                <ChakraLink as="a">Next.js Supabase Starterrr</ChakraLink>
               </Link>
               <HStack spacing={2} align="center">
                 <DeployButton />
@@ -59,42 +58,12 @@ export default function Home() {
                 <Heading as="h2" size="md" mb={4} fontWeight="medium">
                   Next steps
                 </Heading>
-                {hasEnvVars ? <SignUpUserSteps /> : <ConnectSupabaseSteps />}
               </VStack>
             </Box>
           </VStack>
         </Container>
 
-        <Box
-          as="footer"
-          w="full"
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
-          borderTopWidth="1px"
-          borderColor="gray.200"
-          _dark={{ borderColor: "gray.700" }}
-          mx="auto"
-          textAlign="center"
-          fontSize="xs"
-          gap={8}
-          py={16}
-        >
-          <Text>
-            Powered by{" "}
-            <ChakraLink
-              href="https://supabase.com/?utm_source=create-next-app&utm_medium=template&utm_term=nextjs"
-              target="_blank"
-              fontWeight="bold"
-              textDecoration="underline"
-              _hover={{ textDecoration: "underline" }}
-              rel="noreferrer"
-            >
-              Supabase
-            </ChakraLink>
-          </Text>
-          <ThemeSwitcher />
-        </Box>
+      
       </VStack>
     </Box>
   );

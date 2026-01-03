@@ -40,7 +40,7 @@ export const FormInput = forwardRef<HTMLInputElement, FormInputProps>(
 
     return (
       <FormControl isInvalid={!!error}>
-        {label && <Label htmlFor={id} color={"#718096"}>{label}</Label>}
+        {label && <Label htmlFor={id} color={"#718096"} fontWeight={"normal"}>{label}</Label>}
         {isPassword ? (
           <InputGroup mt={label ? 2 : 0}>
             <Input {...inputProps} />
@@ -48,7 +48,6 @@ export const FormInput = forwardRef<HTMLInputElement, FormInputProps>(
               <IconButton
                 aria-label={showPassword ? "Hide password" : "Show password"}
                 icon={showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
-                // h="1.75rem"
                 h="100%"
                 size="sm"
                 onClick={() => setShowPassword(!showPassword)}

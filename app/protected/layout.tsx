@@ -56,36 +56,7 @@ export default function ProtectedLayout({
           </VStack>
         </Container>
 
-        <Box
-          as="footer"
-          w="full"
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
-          borderTopWidth="1px"
-          borderColor="gray.200"
-          _dark={{ borderColor: "gray.700" }}
-          mx="auto"
-          textAlign="center"
-          fontSize="xs"
-          gap={8}
-          py={16}
-        >
-          <Text>
-            Powered by{" "}
-            <ChakraLink
-              href="https://supabase.com/?utm_source=create-next-app&utm_medium=template&utm_term=nextjs"
-              target="_blank"
-              fontWeight="bold"
-              textDecoration="underline"
-              _hover={{ textDecoration: "underline" }}
-              rel="noreferrer"
-            >
-              Supabase
-            </ChakraLink>
-          </Text>
-          <ThemeSwitcher />
-        </Box>
+      
       </VStack>
     </Box>
   );
