@@ -89,7 +89,7 @@ const HomeHero = () => {
           spacing={8}
           py={20}
         //   px={20}
-          maxW={["full", "full", "800px"]}
+          maxW={["full", "full", "720px"]}
           color="white"
         >
           <VStack align="flex-start" spacing={4}>
