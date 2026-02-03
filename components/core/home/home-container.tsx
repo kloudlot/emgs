@@ -1,11 +1,11 @@
-import { Box } from "@chakra-ui/react"
+import { Box, Container } from "@chakra-ui/react"
 import HomeHero from "./home-hero"
 
 const HomeContainer = () => {
   return (
-    <Box>
+    <Container maxW="1420px" >
       <HomeHero />
-    </Box>
+    </Container>
   )
 }
 

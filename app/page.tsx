@@ -26,7 +26,7 @@ export default function Home() {
       minH="100vh"
       display="flex"
       flexDirection="column"
-      alignItems="center"
+      alignItems="stretch"
     >
       <HomeContainer />
     </Box>

@@ -1,5 +1,5 @@
 import { AuthButton } from "@/components/auth-button";
-import { Container, Box, Flex, IconButton, Icon, Text } from "@chakra-ui/react";
+import { Container, Box, Flex, IconButton, Icon, Text, HStack } from "@chakra-ui/react";
 import { Mail, Phone, ShoppingCart } from "lucide-react";
 import Link from "next/link";
 import NavLinks from "./nav-links";
@@ -45,7 +45,7 @@ const HomeNav = () => {
         display="flex"
         justifyContent="space-between"
         alignItems="center"
-        py={2}
+        py={4}
         px={5}
       >
         <Link href="/">
@@ -53,31 +53,23 @@ const HomeNav = () => {
             as="img"
             src="/images/logo.png"
             alt="logo"
-            width={"60px"}
-            height={"60px"}
+            width={"50px"}
+            height={"50px"}
+            objectFit="contain"
           />
         </Link>
-        <Box display="flex" alignItems="center">
+        <HStack spacing={8} alignItems="center">
           <NavLinks />
           {/* cart cta */}
-          <Flex alignItems={"center"} gap={2} ml={2}>
-            <IconButton
-              aria-label="Cart"
-              w={["48px"]}
-              h={["48px"]}
-              borderRadius={"50%"}
-              bg={"#F7F7F7"}
-              _hover={{
-                bg: "#F7F7F7",
-              }}
-            >
-              <ShoppingCart color="#ADADAD" fontSize={"24px"} />
-            </IconButton>
-            <Text color={"#ADADAD"} fontSize={"lg"}>
+          <HStack spacing={2} cursor="pointer" _hover={{ opacity: 0.8 }}>
+            <Box position="relative">
+              <ShoppingCart size={24} color="#ADADAD" />
+            </Box>
+            <Text color={"#ADADAD"} fontSize={"lg"} fontWeight="medium">
               Cart
             </Text>
-          </Flex>
-        </Box>
+          </HStack>
+        </HStack>
         {/* auth cta */}
         <AuthButton />
       </Container>
