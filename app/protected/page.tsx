@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 
 import { createClient } from "@/lib/supabase/server";
-import { FetchDataSteps } from "@/components/tutorial/fetch-data-steps";
+// import { FetchDataSteps } from "@/components/tutorial/fetch-data-steps";
 import { Suspense } from "react";
 import {
   Box,
@@ -63,7 +63,7 @@ export default function ProtectedPage() {
         <Heading as="h2" size="xl" fontWeight="bold" mb={4}>
           Next steps
         </Heading>
-        <FetchDataSteps />
+        {/* <FetchDataSteps /> */}
       </Box>
     </VStack>
   );

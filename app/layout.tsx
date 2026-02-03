@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import { ThemeProvider } from "next-themes";
 import { Providers } from "./providers";
 import "./globals.css";
+import HomeNav from "@/components/core/nav/home-nav";
 
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
@@ -34,7 +35,10 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <Providers>{children}</Providers>
+          <Providers>
+            <HomeNav />
+            {children}
+          </Providers>
         </ThemeProvider>
       </body>
     </html>

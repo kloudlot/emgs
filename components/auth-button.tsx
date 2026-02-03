@@ -18,12 +18,14 @@ export async function AuthButton() {
   ) : (
     <HStack spacing={2}>
       <Link href="/auth/login" passHref >
-        <Button as={ChakraLink} size="sm" variant="outline">
-          Sign in
+        <Button size="lg" variant="ghost" color={"brand.500"} borderRadius={"24px"} _hover={{
+          bg: "#F7F7F7",
+        }} >
+          Login
         </Button>
       </Link>
       <Link href="/auth/sign-up" passHref >
-        <Button as={ChakraLink} size="sm" colorScheme="brand">
+        <Button size="lg" colorScheme="brand" borderRadius={"24px"}>
           Sign up
         </Button>
       </Link>
