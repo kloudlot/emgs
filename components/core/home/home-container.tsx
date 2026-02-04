@@ -2,6 +2,7 @@ import { Box, Container, VStack } from "@chakra-ui/react"
 import HomeHero from "./home-hero"
 import CoreServices from "./core-services"
 import HelpProcess from "./help-process"
+import Testimonials from "./testimonials"
 
 const HomeContainer = () => {
   return (
@@ -10,6 +11,7 @@ const HomeContainer = () => {
             <HomeHero />
             <CoreServices />
             <HelpProcess />
+            <Testimonials />
         </VStack>
     </Container>
   )
