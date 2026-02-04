@@ -19,10 +19,11 @@ import {
   Badge,
   Spinner,
 } from "@chakra-ui/react";
-import { ArrowLeft, Save, Eye, Plus, X, Upload } from "lucide-react";
+import { ArrowLeft, Save, Eye, Plus, X, Upload, Edit, Trash2 } from "lucide-react";
 import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { getImageUrl } from "@/lib/sanity/image.service";
+import PackageModal from "@/components/core/admin/package-modal";
 
 export default function CreateServicePage() {
   const router = useRouter();
@@ -41,6 +42,9 @@ export default function CreateServicePage() {
   
   const [whatsIncluded, setWhatsIncluded] = useState<string[]>([""]);
   const [serviceImages, setServiceImages] = useState<any[]>([]);
+  const [packages, setPackages] = useState<any[]>([]);
+  const [isPackageModalOpen, setIsPackageModalOpen] = useState(false);
+  const [editingPackage, setEditingPackage] = useState<any>(null);
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
@@ -131,6 +135,48 @@ export default function CreateServicePage() {
     setServiceImages(serviceImages.filter((_, i) => i !== index));
   };
 
+  // Package handlers
+  const handleAddPackage = () => {
+    setEditingPackage(null);
+    setIsPackageModalOpen(true);
+  };
+
+  const handleEditPackage = (pkg: any, index: number) => {
+    setEditingPackage({ ...pkg, index });
+    setIsPackageModalOpen(true);
+  };
+
+  const handleDeletePackage = (index: number) => {
+    setPackages(packages.filter((_, i) => i !== index));
+    toast({
+      title: "Package removed",
+      status: "info",
+      duration: 2000,
+    });
+  };
+
+  const handleSavePackage = (packageData: any) => {
+    if (editingPackage?.index !== undefined) {
+      // Edit existing package
+      const updated = [...packages];
+      updated[editingPackage.index] = packageData;
+      setPackages(updated);
+      toast({
+        title: "Package updated",
+        status: "success",
+        duration: 2000,
+      });
+    } else {
+      // Add new package
+      setPackages([...packages, packageData]);
+      toast({
+        title: "Package added",
+        status: "success",
+        duration: 2000,
+      });
+    }
+  };
+
   const handleSubmit = async () => {
     if (!formData.title || !formData.slug || !formData.overview) {
       toast({
@@ -151,6 +197,7 @@ export default function CreateServicePage() {
           .filter((item) => item.trim())
           .map((item) => ({ item })),
         serviceImages: serviceImages,
+        packages: packages,
       };
 
       const response = await fetch("/api/services", {
@@ -429,17 +476,90 @@ export default function CreateServicePage() {
                 size="sm"
                 colorScheme="red"
                 leftIcon={<Plus size={16} />}
+                onClick={handleAddPackage}
               >
                 Add Package
               </Button>
             </Flex>
 
-            <Text color="gray.500" fontSize="sm">
-              No packages added yet. Click "Add Package" to create pricing tiers.
-            </Text>
+            {packages.length === 0 ? (
+              <Text color="gray.500" fontSize="sm">
+                No packages added yet. Click "Add Package" to create pricing tiers.
+              </Text>
+            ) : (
+              <VStack spacing={3} align="stretch">
+                {packages.map((pkg, index) => (
+                  <Box
+                    key={index}
+                    p={4}
+                    border="1px solid"
+                    borderColor="gray.200"
+                    borderRadius="8px"
+                    _hover={{ borderColor: "brand.500" }}
+                  >
+                    <Flex justify="space-between" align="start">
+                      <HStack spacing={3} flex={1}>
+                        {pkg.image && (
+                          <Image
+                            src={getImageUrl(pkg.image, 80)}
+                            alt={pkg.name}
+                            w="60px"
+                            h="60px"
+                            objectFit="cover"
+                            borderRadius="6px"
+                          />
+                        )}
+                        <VStack align="start" spacing={1} flex={1}>
+                          <Text fontWeight="600" fontSize="md">
+                            {pkg.name}
+                          </Text>
+                          <Text fontSize="sm" color="gray.600" noOfLines={2}>
+                            {pkg.description || "No description"}
+                          </Text>
+                          <HStack spacing={2}>
+                            <Badge colorScheme="blue">{pkg.packageType}</Badge>
+                            <Text fontWeight="600" color="brand.500">
+                              {pkg.currency} {parseFloat(pkg.price).toLocaleString()}
+                            </Text>
+                          </HStack>
+                        </VStack>
+                      </HStack>
+                      <HStack spacing={1}>
+                        <IconButton
+                          aria-label="Edit package"
+                          icon={<Edit size={16} />}
+                          size="sm"
+                          variant="ghost"
+                          onClick={() => handleEditPackage(pkg, index)}
+                        />
+                        <IconButton
+                          aria-label="Delete package"
+                          icon={<Trash2 size={16} />}
+                          size="sm"
+                          variant="ghost"
+                          colorScheme="red"
+                          onClick={() => handleDeletePackage(index)}
+                        />
+                      </HStack>
+                    </Flex>
+                  </Box>
+                ))}
+              </VStack>
+            )}
           </Box>
         </VStack>
       </SimpleGrid>
+
+      {/* Package Modal */}
+      <PackageModal
+        isOpen={isPackageModalOpen}
+        onClose={() => {
+          setIsPackageModalOpen(false);
+          setEditingPackage(null);
+        }}
+        onSave={handleSavePackage}
+        editData={editingPackage}
+      />
     </VStack>
   );
 }
