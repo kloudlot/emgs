@@ -13,6 +13,7 @@ import {
   Flex,
   Badge,
   Spinner,
+  Input,
 } from "@chakra-ui/react";
 import { ArrowLeft, Eye, Plus, X, Upload, Edit, Trash2 } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
@@ -102,6 +103,12 @@ export default function EditServicePage() {
 
   const handleRemoveIncludedItem = (index: number) => {
     setWhatsIncluded(whatsIncluded.filter((_, i) => i !== index));
+  };
+
+  const handleIncludedItemChange = (index: number, value: string) => {
+    const updated = [...whatsIncluded];
+    updated[index] = value;
+    setWhatsIncluded(updated);
   };
 
   const handleImageUploadClick = () => {
@@ -334,9 +341,13 @@ export default function EditServicePage() {
                   cursor="grab"
                   isDisabled
                 />
-                <Text flex={1} fontSize="sm">
-                  {item}
-                </Text>
+                <Input
+                  flex={1}
+                  size="sm"
+                  value={item}
+                  onChange={(e) => handleIncludedItemChange(index, e.target.value)}
+                  placeholder="e.g., 1-on-1 speaking coaching sessions"
+                />
                 <IconButton
                   aria-label="Remove item"
                   icon={<Trash2 size={16} />}
@@ -344,6 +355,7 @@ export default function EditServicePage() {
                   colorScheme="red"
                   variant="ghost"
                   onClick={() => handleRemoveIncludedItem(index)}
+                  isDisabled={whatsIncluded.length === 1}
                 />
               </HStack>
             ))}

@@ -187,10 +187,44 @@ export async function updateService(data: UpdateServiceDto) {
     }));
   }
   if (updates.packages) {
-    patch.packages = updates.packages.map((id) => ({
-      _type: 'reference',
-      _ref: id,
-    }));
+    // Check if packages are objects (from edit form) or IDs (from API)
+    if (updates.packages.length > 0 && typeof updates.packages[0] === 'object') {
+      // Packages are full objects, need to create/update them first
+      const packageRefs = await Promise.all(
+        updates.packages.map(async (pkg: any) => {
+          if (pkg._id) {
+            // Package already exists, just return reference
+            return {
+              _type: 'reference',
+              _ref: pkg._id,
+            };
+          } else {
+            // Create new package
+            const newPackage = await createPackage({
+              name: pkg.name,
+              price: parseFloat(pkg.price),
+              currency: pkg.currency || 'USD',
+              packageType: pkg.packageType || 'basic',
+              description: pkg.description || '',
+              features: pkg.features || [],
+              popular: pkg.popular || false,
+              active: pkg.active !== undefined ? pkg.active : true,
+            });
+            return {
+              _type: 'reference',
+              _ref: newPackage._id,
+            };
+          }
+        })
+      );
+      patch.packages = packageRefs;
+    } else {
+      // Packages are already IDs
+      patch.packages = updates.packages.map((id) => ({
+        _type: 'reference',
+        _ref: id,
+      }));
+    }
   }
   if (updates.status) {
     patch.status = updates.status;
