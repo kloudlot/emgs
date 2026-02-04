@@ -25,6 +25,7 @@ const HomeContainer = () => {
           <CTAFooter />
         </VStack>
       </Container>
+      <Box my={6} />
     </VStack>
   );
 };
