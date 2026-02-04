@@ -50,7 +50,6 @@ const HelpProcess = () => {
     <Flex
       direction={["column", "column", "row"]}
       gap={[12, 16, 20]}
-      py={20}
       align="center"
       position="relative"
     >

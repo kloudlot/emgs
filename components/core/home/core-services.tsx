@@ -73,7 +73,7 @@ const CoreServices = () => {
   ];
 
   return (
-    <VStack align={"stretch"} spacing={12} py={10}>
+    <VStack align={"stretch"} spacing={12}>
       <VStack align={"flex-start"} spacing={2}>
         <Heading
           fontSize={["32px", "40px", "48px"]}

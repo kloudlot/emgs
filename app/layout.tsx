@@ -4,6 +4,7 @@ import { ThemeProvider } from "next-themes";
 import { Providers } from "./providers";
 import "./globals.css";
 import HomeNav from "@/components/core/nav/home-nav";
+import FooterNav from "@/components/core/nav/footer-nav";
 
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
@@ -38,6 +39,7 @@ export default function RootLayout({
           <Providers>
             <HomeNav />
             {children}
+            <FooterNav />
           </Providers>
         </ThemeProvider>
       </body>
