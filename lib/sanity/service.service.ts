@@ -150,6 +150,7 @@ export async function createService(data: CreateServiceDto) {
       ...img,
     })) || [],
     packages: data.packages?.map((id) => ({
+      _key: crypto.randomUUID(),
       _type: 'reference',
       _ref: id,
     })) || [],
@@ -195,6 +196,7 @@ export async function updateService(data: UpdateServiceDto) {
           if (pkg._id) {
             // Package already exists, just return reference
             return {
+              _key: crypto.randomUUID(),
               _type: 'reference',
               _ref: pkg._id,
             };
@@ -211,6 +213,7 @@ export async function updateService(data: UpdateServiceDto) {
               active: pkg.active !== undefined ? pkg.active : true,
             });
             return {
+              _key: crypto.randomUUID(),
               _type: 'reference',
               _ref: newPackage._id,
             };
@@ -221,6 +224,7 @@ export async function updateService(data: UpdateServiceDto) {
     } else {
       // Packages are already IDs
       patch.packages = updates.packages.map((id) => ({
+        _key: crypto.randomUUID(),
         _type: 'reference',
         _ref: id,
       }));
