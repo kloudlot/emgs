@@ -113,7 +113,7 @@ const HomeHero = () => {
           </VStack>
 
           {/* CTA Buttons */}
-          <HStack spacing={4}>
+          <HStack spacing={4} flexDirection={["column", "row"]}>
             <Button
               bg="white"
               color="#B30E14"
