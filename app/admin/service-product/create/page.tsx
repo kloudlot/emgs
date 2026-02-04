@@ -19,11 +19,21 @@ import {
   Badge,
   Spinner,
 } from "@chakra-ui/react";
-import { ArrowLeft, Save, Eye, Plus, X, Upload, Edit, Trash2 } from "lucide-react";
+import {
+  ArrowLeft,
+  Save,
+  Eye,
+  Plus,
+  X,
+  Upload,
+  Edit,
+  Trash2,
+} from "lucide-react";
 import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { getImageUrl } from "@/lib/sanity/image.service";
 import PackageModal from "@/components/core/admin/package-modal";
+import CustomButton from "@/components/custom-button";
 
 export default function CreateServicePage() {
   const router = useRouter();
@@ -31,15 +41,16 @@ export default function CreateServicePage() {
   const [loading, setLoading] = useState(false);
   const [uploadingImages, setUploadingImages] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  
+
   const [formData, setFormData] = useState({
     title: "",
     slug: "",
     overview: "",
+    description: "",
     status: "draft",
     featured: false,
   });
-  
+
   const [whatsIncluded, setWhatsIncluded] = useState<string[]>([""]);
   const [serviceImages, setServiceImages] = useState<any[]>([]);
   const [packages, setPackages] = useState<any[]>([]);
@@ -47,14 +58,19 @@ export default function CreateServicePage() {
   const [editingPackage, setEditingPackage] = useState<any>(null);
 
   const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >,
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
-    
+
     // Auto-generate slug from title
     if (name === "title") {
-      const slug = value.toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "");
+      const slug = value
+        .toLowerCase()
+        .replace(/\s+/g, "-")
+        .replace(/[^a-z0-9-]/g, "");
       setFormData((prev) => ({ ...prev, slug }));
     }
   };
@@ -85,7 +101,7 @@ export default function CreateServicePage() {
     try {
       setUploadingImages(true);
       const formData = new FormData();
-      
+
       Array.from(files).forEach((file) => {
         formData.append("files", file);
       });
@@ -98,9 +114,11 @@ export default function CreateServicePage() {
       const result = await response.json();
 
       if (result.success) {
-        const newImages = Array.isArray(result.data) ? result.data : [result.data];
+        const newImages = Array.isArray(result.data)
+          ? result.data
+          : [result.data];
         setServiceImages([...serviceImages, ...newImages]);
-        
+
         toast({
           title: "Success",
           description: `${files.length} image(s) uploaded successfully`,
@@ -190,7 +208,7 @@ export default function CreateServicePage() {
 
     try {
       setLoading(true);
-      
+
       const payload = {
         ...formData,
         whatsIncluded: whatsIncluded
@@ -257,28 +275,92 @@ export default function CreateServicePage() {
             icon={<ArrowLeft size={20} />}
             variant="ghost"
             onClick={() => router.back()}
+            borderRadius={"full"}
+            _hover={{
+              bg: "brand.500",
+              border: "none",
+              outline: "none",
+            }}
+            w={"48px"}
+            h={"48px"}
+            bg="brand.500"
+            color="white"
           />
           <Heading size="lg">Create Service</Heading>
         </HStack>
         <HStack spacing={3}>
-          <Button
-            leftIcon={<Eye size={18} />}
+          <CustomButton
+            rightIcon={<Eye size={18} />}
             variant="outline"
-            colorScheme="gray"
-          >
-            Preview
-          </Button>
-          <Button
-            leftIcon={<Save size={18} />}
-            colorScheme="red"
+            text="Preview"
+            size={"sm"}
+            borderRadius={"md"}
+            onClick={() => {}}
+            bg="#A70B1C0A"
+            border="none"
+            outline="none"
+            _hover={{
+              bg: "#A70B1C0A",
+              border: "none",
+              outline: "none",
+            }}
+          />
+          <CustomButton
             onClick={handleSubmit}
             isLoading={loading}
-          >
-            Save & Close
-          </Button>
+            text="Save (Unpublished)"
+            size={"sm"}
+            borderRadius={"md"}
+          />
         </HStack>
       </Flex>
 
+      {/* new */}
+
+      <SimpleGrid columns={[1, 1, 2]} spacing={6}>
+        <FormControl isRequired>
+          <FormLabel>Service Title</FormLabel>
+          <Input
+            name="title"
+            value={formData.title}
+            onChange={handleInputChange}
+            placeholder="e.g., Basic IELTS Prep"
+          />
+        </FormControl>
+
+        <FormControl isRequired>
+          <FormLabel>Service Description</FormLabel>
+          <Input
+            name="description"
+            value={formData.description}
+            onChange={handleInputChange}
+            placeholder="e.g., Basic IELTS Prep Description"
+          />
+        </FormControl>
+
+           <FormControl isRequired>
+                <FormLabel>Slug</FormLabel>
+                <Input
+                  name="slug"
+                  value={formData.slug}
+                  onChange={handleInputChange}
+                  placeholder="basic-ielts-prep"
+                />
+              </FormControl>
+
+              <FormControl isRequired>
+                <FormLabel>Overview</FormLabel>
+                <Textarea
+                  name="overview"
+                  value={formData.overview}
+                  onChange={handleInputChange}
+                  rows={6}
+                  placeholder="This comprehensive preparation program is designed to help you excel..."
+                />
+              </FormControl>
+      </SimpleGrid>
+
+      {/* old */}
       <SimpleGrid columns={[1, 1, 2]} spacing={6}>
         {/* Left Column - Overview */}
         <VStack align="stretch" spacing={6}>
@@ -292,7 +374,9 @@ export default function CreateServicePage() {
             <VStack align="stretch" spacing={4}>
               <Heading size="md" fontSize="18px" mb={2}>
                 Overview
-                <Badge ml={2} colorScheme="red">Required</Badge>
+                <Badge ml={2} colorScheme="red">
+                  Required
+                </Badge>
               </Heading>
 
               <FormControl isRequired>
@@ -327,6 +411,17 @@ export default function CreateServicePage() {
               </FormControl>
 
               <FormControl>
+                <FormLabel>Description</FormLabel>
+                <Textarea
+                  name="description"
+                  value={formData.description}
+                  onChange={handleInputChange}
+                  rows={8}
+                  placeholder="Detailed description of the service..."
+                />
+              </FormControl>
+
+              <FormControl>
                 <FormLabel>Status</FormLabel>
                 <Select
                   name="status"
@@ -351,7 +446,9 @@ export default function CreateServicePage() {
           >
             <Heading size="md" fontSize="18px" mb={4}>
               Service Images
-              <Badge ml={2} colorScheme="orange">Optional</Badge>
+              <Badge ml={2} colorScheme="orange">
+                Optional
+              </Badge>
             </Heading>
 
             <Box
@@ -425,7 +522,9 @@ export default function CreateServicePage() {
             <Flex justify="space-between" align="center" mb={4}>
               <Heading size="md" fontSize="18px">
                 What's Included
-                <Badge ml={2} colorScheme="orange">Optional</Badge>
+                <Badge ml={2} colorScheme="orange">
+                  Optional
+                </Badge>
               </Heading>
               <Button
                 size="sm"
@@ -443,7 +542,9 @@ export default function CreateServicePage() {
                 <HStack key={index} spacing={2}>
                   <Input
                     value={item}
-                    onChange={(e) => handleIncludedItemChange(index, e.target.value)}
+                    onChange={(e) =>
+                      handleIncludedItemChange(index, e.target.value)
+                    }
                     placeholder="e.g., 1-on-1 speaking coaching sessions"
                   />
                   <IconButton
@@ -484,7 +585,8 @@ export default function CreateServicePage() {
 
             {packages.length === 0 ? (
               <Text color="gray.500" fontSize="sm">
-                No packages added yet. Click "Add Package" to create pricing tiers.
+                No packages added yet. Click "Add Package" to create pricing
+                tiers.
               </Text>
             ) : (
               <VStack spacing={3} align="stretch">
@@ -519,7 +621,8 @@ export default function CreateServicePage() {
                           <HStack spacing={2}>
                             <Badge colorScheme="blue">{pkg.packageType}</Badge>
                             <Text fontWeight="600" color="brand.500">
-                              {pkg.currency} {parseFloat(pkg.price).toLocaleString()}
+                              {pkg.currency}{" "}
+                              {parseFloat(pkg.price).toLocaleString()}
                             </Text>
                           </HStack>
                         </VStack>

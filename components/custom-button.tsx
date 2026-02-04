@@ -8,15 +8,14 @@ interface CustomButtonProps extends ButtonProps {
 const CustomButton = ({ text, onClick, ...props }: CustomButtonProps) => {
   return (
     <Button
-      bg={"#B30E14"}
-      color={"#ffffff"}
+      colorScheme="brand"
       height={"60px"}
       px={"12"}
       borderRadius={"full"}
       fontSize={"lg"}
       fontWeight={"bold"}
       _hover={{
-        bg: "#930c10",
+        bg: "brand.600",
         transform: "translateY(-2px)",
         boxShadow: "xl",
       }}

@@ -4,6 +4,7 @@ export interface CreateServiceDto {
   title: string;
   slug: string;
   overview: string;
+  description?: string;
   whatsIncluded?: Array<{ item: string }>;
   serviceImages?: any[];
   packages?: string[];
@@ -40,6 +41,7 @@ export async function getServices(params?: {
     title,
     slug,
     overview,
+    description,
     whatsIncluded,
     serviceImages,
     packages[]-> {
@@ -70,6 +72,7 @@ export async function getServiceById(id: string) {
     title,
     slug,
     overview,
+    description,
     whatsIncluded,
     serviceImages,
     packages[]-> {
@@ -104,6 +107,7 @@ export async function getServiceBySlug(slug: string) {
     title,
     slug,
     overview,
+    description,
     whatsIncluded,
     serviceImages,
     packages[]-> {
@@ -141,6 +145,7 @@ export async function createService(data: CreateServiceDto) {
       current: data.slug,
     },
     overview: data.overview,
+    description: data.description,
     whatsIncluded: data.whatsIncluded?.map((item) => ({
       _key: crypto.randomUUID(),
       ...item,
@@ -175,6 +180,7 @@ export async function updateService(data: UpdateServiceDto) {
   if (updates.title) patch.title = updates.title;
   if (updates.slug) patch.slug = { _type: 'slug', current: updates.slug };
   if (updates.overview) patch.overview = updates.overview;
+  if (updates.description !== undefined) patch.description = updates.description;
   if (updates.whatsIncluded) {
     patch.whatsIncluded = updates.whatsIncluded.map((item) => ({
       _key: crypto.randomUUID(),

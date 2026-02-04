@@ -30,6 +30,13 @@ export default defineType({
       validation: (Rule) => Rule.required(),
     }),
     defineField({
+      name: 'description',
+      title: 'Description',
+      type: 'text',
+      rows: 8,
+      description: 'Detailed description of the service',
+    }),
+    defineField({
       name: 'whatsIncluded',
       title: "What's Included",
       type: 'array',

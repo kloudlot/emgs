@@ -34,6 +34,7 @@ export default function EditServicePage() {
     title: "",
     slug: "",
     overview: "",
+    description: "",
     status: "draft",
     featured: false,
   });
@@ -62,6 +63,7 @@ export default function EditServicePage() {
           title: service.title || "",
           slug: service.slug?.current || "",
           overview: service.overview || "",
+          description: service.description || "",
           status: service.status || "draft",
           featured: service.featured || false,
         });
@@ -309,9 +311,20 @@ export default function EditServicePage() {
           <Heading size="md" fontSize="18px" mb={4}>
             Overview <Badge ml={2} colorScheme="red">Required</Badge>
           </Heading>
-          <Text color="gray.700" lineHeight="1.7" fontSize="sm">
+          <Text color="gray.700" lineHeight="1.7" fontSize="sm" mb={4}>
             {formData.overview}
           </Text>
+          
+          {formData.description && (
+            <>
+              <Heading size="sm" fontSize="16px" mb={2} mt={4}>
+                Description
+              </Heading>
+              <Text color="gray.700" lineHeight="1.7" fontSize="sm">
+                {formData.description}
+              </Text>
+            </>
+          )}
         </Box>
 
         <Box bg="white" p={6} borderRadius="16px" border="1px solid" borderColor="gray.100">
