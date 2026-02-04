@@ -16,19 +16,21 @@ import {
   Link as ChakraLink,
   Divider,
 } from "@chakra-ui/react";
-import { Header } from "@/components/header";
 import HomeContainer from "@/components/core/home/home-container";
+import WebsiteShell from "@/components/core/website-shell";
 
 export default function Home() {
   return (
-    <Box
-      as="main"
-      minH="100vh"
-      display="flex"
-      flexDirection="column"
-      alignItems="stretch"
-    >
-      <HomeContainer />
-    </Box>
+    <WebsiteShell>
+      <Box
+        as="main"
+        minH="100vh"
+        display="flex"
+        flexDirection="column"
+        alignItems="stretch"
+      >
+        <HomeContainer />
+      </Box>
+    </WebsiteShell>
   );
 }
