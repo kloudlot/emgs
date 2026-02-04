@@ -16,17 +16,20 @@ import {
   Text,
   useToast,
   Flex,
-  Divider,
   Badge,
+  Spinner,
 } from "@chakra-ui/react";
 import { ArrowLeft, Save, Eye, Plus, X, Upload } from "lucide-react";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
+import { getImageUrl } from "@/lib/sanity/image.service";
 
 export default function CreateServicePage() {
   const router = useRouter();
   const toast = useToast();
   const [loading, setLoading] = useState(false);
+  const [uploadingImages, setUploadingImages] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   
   const [formData, setFormData] = useState({
     title: "",
@@ -37,7 +40,7 @@ export default function CreateServicePage() {
   });
   
   const [whatsIncluded, setWhatsIncluded] = useState<string[]>([""]);
-  const [serviceImages, setServiceImages] = useState<string[]>([]);
+  const [serviceImages, setServiceImages] = useState<any[]>([]);
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
@@ -66,6 +69,68 @@ export default function CreateServicePage() {
     setWhatsIncluded(updated);
   };
 
+  // Image upload handlers
+  const handleImageUploadClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+
+    try {
+      setUploadingImages(true);
+      const formData = new FormData();
+      
+      Array.from(files).forEach((file) => {
+        formData.append("files", file);
+      });
+
+      const response = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        const newImages = Array.isArray(result.data) ? result.data : [result.data];
+        setServiceImages([...serviceImages, ...newImages]);
+        
+        toast({
+          title: "Success",
+          description: `${files.length} image(s) uploaded successfully`,
+          status: "success",
+          duration: 3000,
+        });
+      } else {
+        toast({
+          title: "Error",
+          description: result.message || "Failed to upload images",
+          status: "error",
+          duration: 3000,
+        });
+      }
+    } catch (error) {
+      console.error("Error uploading images:", error);
+      toast({
+        title: "Error",
+        description: "Failed to upload images",
+        status: "error",
+        duration: 3000,
+      });
+    } finally {
+      setUploadingImages(false);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
+    }
+  };
+
+  const handleRemoveImage = (index: number) => {
+    setServiceImages(serviceImages.filter((_, i) => i !== index));
+  };
+
   const handleSubmit = async () => {
     if (!formData.title || !formData.slug || !formData.overview) {
       toast({
@@ -85,6 +150,7 @@ export default function CreateServicePage() {
         whatsIncluded: whatsIncluded
           .filter((item) => item.trim())
           .map((item) => ({ item })),
+        serviceImages: serviceImages,
       };
 
       const response = await fetch("/api/services", {
@@ -126,6 +192,16 @@ export default function CreateServicePage() {
 
   return (
     <VStack align="stretch" spacing={6}>
+      {/* Hidden file input */}
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="image/jpeg,image/jpg,image/png"
+        multiple
+        style={{ display: "none" }}
+        onChange={handleImageUpload}
+      />
+
       {/* Header */}
       <Flex justify="space-between" align="center">
         <HStack spacing={4}>
@@ -228,7 +304,7 @@ export default function CreateServicePage() {
           >
             <Heading size="md" fontSize="18px" mb={4}>
               Service Images
-              <Badge ml={2} colorScheme="red">Required</Badge>
+              <Badge ml={2} colorScheme="orange">Optional</Badge>
             </Heading>
 
             <Box
@@ -239,16 +315,26 @@ export default function CreateServicePage() {
               textAlign="center"
               cursor="pointer"
               _hover={{ borderColor: "brand.500", bg: "gray.50" }}
+              onClick={handleImageUploadClick}
             >
-              <VStack spacing={2}>
-                <Upload size={32} color="#999" />
-                <Text fontSize="sm" color="gray.600">
-                  Upload your image here
-                </Text>
-                <Text fontSize="xs" color="gray.400">
-                  .jpeg, .jpg, .png
-                </Text>
-              </VStack>
+              {uploadingImages ? (
+                <VStack spacing={2}>
+                  <Spinner size="lg" color="brand.500" />
+                  <Text fontSize="sm" color="gray.600">
+                    Uploading images...
+                  </Text>
+                </VStack>
+              ) : (
+                <VStack spacing={2}>
+                  <Upload size={32} color="#999" />
+                  <Text fontSize="sm" color="gray.600">
+                    Click to upload images
+                  </Text>
+                  <Text fontSize="xs" color="gray.400">
+                    .jpeg, .jpg, .png (multiple files supported)
+                  </Text>
+                </VStack>
+              )}
             </Box>
 
             {serviceImages.length > 0 && (
@@ -256,11 +342,12 @@ export default function CreateServicePage() {
                 {serviceImages.map((img, idx) => (
                   <Box key={idx} position="relative">
                     <Image
-                      src={img}
+                      src={getImageUrl(img, 300)}
                       alt={`Service image ${idx + 1}`}
                       borderRadius="8px"
                       objectFit="cover"
                       h="100px"
+                      w="100%"
                     />
                     <IconButton
                       aria-label="Remove image"
@@ -270,9 +357,7 @@ export default function CreateServicePage() {
                       top={2}
                       right={2}
                       colorScheme="red"
-                      onClick={() =>
-                        setServiceImages(serviceImages.filter((_, i) => i !== idx))
-                      }
+                      onClick={() => handleRemoveImage(idx)}
                     />
                   </Box>
                 ))}
@@ -293,7 +378,7 @@ export default function CreateServicePage() {
             <Flex justify="space-between" align="center" mb={4}>
               <Heading size="md" fontSize="18px">
                 What's Included
-                <Badge ml={2} colorScheme="red">Required</Badge>
+                <Badge ml={2} colorScheme="orange">Optional</Badge>
               </Heading>
               <Button
                 size="sm"
