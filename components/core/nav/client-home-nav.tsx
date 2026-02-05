@@ -1,10 +1,11 @@
-import { AuthButton } from "@/components/auth-button";
+"use client";
 import {
   Container,
   Box,
   Flex,
   Text,
   HStack,
+  Button,
 } from "@chakra-ui/react";
 import { Mail, Phone } from "lucide-react";
 import Link from "next/link";
@@ -12,7 +13,7 @@ import NavLinks from "./nav-links";
 import MobileNav from "./mobile-nav";
 import CartIcon from "./cart-icon";
 
-const HomeNav = () => {
+const ClientHomeNav = () => {
   return (
     <Box>
       <Box bg={"#28353D"} mb={["10px", "14px", "28px"]}>
@@ -73,15 +74,57 @@ const HomeNav = () => {
 
         {/* Desktop Auth */}
         <Box display={["none", "none", "flex"]}>
-          <AuthButton />
+          <HStack spacing={2}>
+            <Link href="/auth/login" passHref>
+              <Button
+                size="lg"
+                variant="ghost"
+                color={"brand.500"}
+                borderRadius={"24px"}
+                _hover={{
+                  bg: "#F7F7F7",
+                }}
+              >
+                Login
+              </Button>
+            </Link>
+            <Link href="/auth/sign-up" passHref>
+              <Button size="lg" colorScheme="brand" borderRadius={"24px"}>
+                Sign up
+              </Button>
+            </Link>
+          </HStack>
         </Box>
 
         {/* Mobile Navigation (Client Side) */}
-        <MobileNav authButton={<AuthButton />} />
+        <MobileNav
+          authButton={
+            <HStack spacing={2}>
+              <Link href="/auth/login" passHref>
+                <Button
+                  size="lg"
+                  variant="ghost"
+                  color={"brand.500"}
+                  borderRadius={"24px"}
+                  _hover={{
+                    bg: "#F7F7F7",
+                  }}
+                >
+                  Login
+                </Button>
+              </Link>
+              <Link href="/auth/sign-up" passHref>
+                <Button size="lg" colorScheme="brand" borderRadius={"24px"}>
+                  Sign up
+                </Button>
+              </Link>
+            </HStack>
+          }
+        />
       </Container>
     </Box>
   );
 };
 
-HomeNav.displayName = "HomeNav";
-export default HomeNav;
+ClientHomeNav.displayName = "ClientHomeNav";
+export default ClientHomeNav;

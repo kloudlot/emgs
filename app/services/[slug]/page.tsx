@@ -110,6 +110,7 @@ const ServiceDetailsPage = async ({ params }: ServicePageProps) => {
                 .map((pkg: any) => (
                   <PackageCard
                     key={pkg._id}
+                    id={pkg._id}
                     name={pkg.name}
                     price={pkg.price}
                     currency={pkg.currency}
@@ -118,6 +119,8 @@ const ServiceDetailsPage = async ({ params }: ServicePageProps) => {
                     features={pkg.features}
                     image={pkg.image}
                     popular={pkg.popular}
+                    serviceSlug={service.slug.current}
+                    serviceName={service.title}
                   />
                 ))}
             </SimpleGrid>

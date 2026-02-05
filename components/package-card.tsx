@@ -14,6 +14,7 @@ import {
 } from "@chakra-ui/react";
 import { getImageUrl } from "@/lib/sanity/image.service";
 import { ArrowUp, Circle, ShoppingCart } from "lucide-react";
+import { useCart } from "@/contexts/cart-context";
 
 interface PackageFeature {
   feature: string;
@@ -22,6 +23,7 @@ interface PackageFeature {
 }
 
 interface PackageCardProps {
+  id: string;
   name: string;
   price: number;
   currency: string;
@@ -30,9 +32,12 @@ interface PackageCardProps {
   features?: PackageFeature[];
   image?: any;
   popular?: boolean;
+  serviceSlug?: string;
+  serviceName?: string;
 }
 
 const PackageCard = ({
+  id,
   name,
   price,
   currency,
@@ -41,8 +46,11 @@ const PackageCard = ({
   features = [],
   image,
   popular = false,
+  serviceSlug,
+  serviceName,
   ...rest
 }: PackageCardProps) => {
+  const { addToCart } = useCart();
   const currencySymbol =
     currency === "USD"
       ? "$"
@@ -51,6 +59,19 @@ const PackageCard = ({
         : currency === "GBP"
           ? "£"
           : "€";
+
+  const handleAddToCart = () => {
+    addToCart({  
+      id,
+      name,
+      price,
+      currency,
+      image,
+      serviceSlug,
+      serviceName,
+      packageType,
+    });
+  };
 
   return (
     <>
@@ -139,6 +160,7 @@ const PackageCard = ({
               bg:"transparent"
             }}
             rightIcon={<Icon as={ShoppingCart} />}
+            onClick={handleAddToCart}
           >
             Add to Cart
           </Button>
