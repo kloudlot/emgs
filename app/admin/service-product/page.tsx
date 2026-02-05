@@ -17,11 +17,19 @@ import {
   Spinner,
   Text,
   Flex,
+  Menu,
   MenuButton,
   MenuList,
   MenuItem,
 } from "@chakra-ui/react";
-import { Plus, Edit, Trash2, Eye, Menu, ChevronDown } from "lucide-react";
+import {
+  Plus,
+  Edit,
+  Trash2,
+  Eye,
+  ChevronDown,
+  MoreVertical,
+} from "lucide-react";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
@@ -49,25 +57,25 @@ export default function ServiceProductPage() {
   const fetchServices = async () => {
     try {
       setLoading(true);
-      const response = await fetch('/api/services');
+      const response = await fetch("/api/services");
       const result = await response.json();
-      
+
       if (result.success) {
         setServices(result.data);
       } else {
         toast({
-          title: 'Error',
-          description: 'Failed to fetch services',
-          status: 'error',
+          title: "Error",
+          description: "Failed to fetch services",
+          status: "error",
           duration: 3000,
         });
       }
     } catch (error) {
-      console.error('Error fetching services:', error);
+      console.error("Error fetching services:", error);
       toast({
-        title: 'Error',
-        description: 'Failed to fetch services',
-        status: 'error',
+        title: "Error",
+        description: "Failed to fetch services",
+        status: "error",
         duration: 3000,
       });
     } finally {
@@ -76,37 +84,37 @@ export default function ServiceProductPage() {
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this service?')) return;
+    if (!confirm("Are you sure you want to delete this service?")) return;
 
     try {
       const response = await fetch(`/api/services/${id}`, {
-        method: 'DELETE',
+        method: "DELETE",
       });
-      
+
       const result = await response.json();
-      
+
       if (result.success) {
         toast({
-          title: 'Success',
-          description: 'Service deleted successfully',
-          status: 'success',
+          title: "Success",
+          description: "Service deleted successfully",
+          status: "success",
           duration: 3000,
         });
         fetchServices();
       } else {
         toast({
-          title: 'Error',
-          description: result.message || 'Failed to delete service',
-          status: 'error',
+          title: "Error",
+          description: result.message || "Failed to delete service",
+          status: "error",
           duration: 3000,
         });
       }
     } catch (error) {
-      console.error('Error deleting service:', error);
+      console.error("Error deleting service:", error);
       toast({
-        title: 'Error',
-        description: 'Failed to delete service',
-        status: 'error',
+        title: "Error",
+        description: "Failed to delete service",
+        status: "error",
         duration: 3000,
       });
     }
@@ -114,14 +122,14 @@ export default function ServiceProductPage() {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'published':
-        return 'green';
-      case 'draft':
-        return 'yellow';
-      case 'archived':
-        return 'gray';
+      case "published":
+        return "green";
+      case "draft":
+        return "yellow";
+      case "archived":
+        return "gray";
       default:
-        return 'gray';
+        return "gray";
     }
   };
 
@@ -132,7 +140,7 @@ export default function ServiceProductPage() {
         <Button
           leftIcon={<Plus size={20} />}
           colorScheme="red"
-          onClick={() => router.push('/admin/service-product/create')}
+          onClick={() => router.push("/admin/service-product/create")}
         >
           Add Service
         </Button>
@@ -157,7 +165,7 @@ export default function ServiceProductPage() {
           <Button
             leftIcon={<Plus size={20} />}
             colorScheme="red"
-            onClick={() => router.push('/admin/service-product/create')}
+            onClick={() => router.push("/admin/service-product/create")}
           >
             Create Your First Service
           </Button>
@@ -177,9 +185,8 @@ export default function ServiceProductPage() {
               <Tr textTransform={"none"}>
                 <Th textTransform={"none"}>Title</Th>
                 <Th textTransform={"none"}>Description</Th>
-                <Th textTransform={"none"}>Status</Th>
-                <Th textTransform={"none"}>Featured</Th>
-                <Th textTransform={"none"}>Service Packages</Th>
+                <Th textTransform={"none"} textAlign={"center"}>Service Packages</Th>
+                <Th textTransform={"none"} textAlign={"center"}>Status</Th>
                 <Th textTransform={"none"}>Actions</Th>
               </Tr>
             </Thead>
@@ -188,50 +195,52 @@ export default function ServiceProductPage() {
                 <Tr key={service._id}>
                   <Td>{service.title}</Td>
                   <Td>{service.description}</Td>
-                  <Td>
+                  <Td textAlign={"center"}>{service.packages?.length || 0}</Td>
+                  <Td textAlign={"center"}>
                     <Badge colorScheme={getStatusColor(service.status)}>
                       {service.status}
                     </Badge>
                   </Td>
                   <Td>
-                    {service.featured ? (
-                      <Badge colorScheme="purple">Featured</Badge>
-                    ) : (
-                      <Text color="gray.400">-</Text>
-                    )}
-                  </Td>
-                  <Td>{service.packages?.length || 0}</Td>
-                  <Td>
-                    {/* dropdown */}
-                    <HStack spacing={2}>
-                      <IconButton
-                        aria-label="View service"
-                        icon={<Eye size={18} />}
-                        size="sm"
-                        variant="ghost"
-                        onClick={() =>
-                          router.push(`/admin/service-product/view/${service._id}`)
-                        }
+                    <Menu>
+                      <MenuButton
+                        as={IconButton}
+                        aria-label="Actions"
+                        icon={<MoreVertical size={18} />}
+                        borderRadius={"full"}
+                        w={"40px"}
+                        h={"40px"}
                       />
-                      <IconButton
-                        aria-label="Edit service"
-                        icon={<Edit size={18} />}
-                        size="sm"
-                        variant="ghost"
-                        colorScheme="blue"
-                        onClick={() =>
-                          router.push(`/admin/service-product/edit/${service._id}`)
-                        }
-                      />
-                      <IconButton
-                        aria-label="Delete service"
-                        icon={<Trash2 size={18} />}
-                        size="sm"
-                        variant="ghost"
-                        colorScheme="red"
-                        onClick={() => handleDelete(service._id)}
-                      />
-                    </HStack>
+                      <MenuList>
+                        <MenuItem
+                          icon={<Eye size={16} />}
+                          onClick={() =>
+                            router.push(
+                              `/admin/service-product/view/${service._id}`,
+                            )
+                          }
+                        >
+                          View
+                        </MenuItem>
+                        <MenuItem
+                          icon={<Edit size={16} />}
+                          onClick={() =>
+                            router.push(
+                              `/admin/service-product/edit/${service._id}`,
+                            )
+                          }
+                        >
+                          Edit
+                        </MenuItem>
+                        <MenuItem
+                          icon={<Trash2 size={16} />}
+                          color="red.500"
+                          onClick={() => handleDelete(service._id)}
+                        >
+                          Delete
+                        </MenuItem>
+                      </MenuList>
+                    </Menu>
                   </Td>
                 </Tr>
               ))}
