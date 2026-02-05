@@ -17,8 +17,11 @@ import {
   Spinner,
   Text,
   Flex,
+  MenuButton,
+  MenuList,
+  MenuItem,
 } from "@chakra-ui/react";
-import { Plus, Edit, Trash2, Eye } from "lucide-react";
+import { Plus, Edit, Trash2, Eye, Menu, ChevronDown } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
@@ -28,6 +31,7 @@ interface Service {
   slug: { current: string };
   status: string;
   featured: boolean;
+  description: string;
   packages: any[];
   publishedAt?: string;
 }
@@ -170,19 +174,20 @@ export default function ServiceProductPage() {
         >
           <Table variant="simple">
             <Thead bg="gray.50">
-              <Tr>
-                <Th>Service Title</Th>
-                <Th>Status</Th>
-                <Th>Featured</Th>
-                <Th>Packages</Th>
-                <Th>Published</Th>
-                <Th>Actions</Th>
+              <Tr textTransform={"none"}>
+                <Th textTransform={"none"}>Title</Th>
+                <Th textTransform={"none"}>Description</Th>
+                <Th textTransform={"none"}>Status</Th>
+                <Th textTransform={"none"}>Featured</Th>
+                <Th textTransform={"none"}>Service Packages</Th>
+                <Th textTransform={"none"}>Actions</Th>
               </Tr>
             </Thead>
             <Tbody>
               {services.map((service) => (
                 <Tr key={service._id}>
-                  <Td fontWeight="medium">{service.title}</Td>
+                  <Td>{service.title}</Td>
+                  <Td>{service.description}</Td>
                   <Td>
                     <Badge colorScheme={getStatusColor(service.status)}>
                       {service.status}
@@ -196,12 +201,8 @@ export default function ServiceProductPage() {
                     )}
                   </Td>
                   <Td>{service.packages?.length || 0}</Td>
-                  <Td fontSize="sm" color="gray.600">
-                    {service.publishedAt
-                      ? new Date(service.publishedAt).toLocaleDateString()
-                      : '-'}
-                  </Td>
                   <Td>
+                    {/* dropdown */}
                     <HStack spacing={2}>
                       <IconButton
                         aria-label="View service"

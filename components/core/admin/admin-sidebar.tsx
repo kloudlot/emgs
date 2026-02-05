@@ -36,7 +36,6 @@ const AdminSidebar = ({ onClose }: { onClose?: () => void }) => {
     <Box
       w="280px"
       h="100vh"
-      bg="white"
       borderRight="1px solid"
       borderColor="gray.100"
       position="fixed"
@@ -45,6 +44,7 @@ const AdminSidebar = ({ onClose }: { onClose?: () => void }) => {
       py={8}
       zIndex={20}
       display={{ base: "none", md: "block" }}
+      bg="#F9FAFB"
     >
       <VStack spacing={8} align="stretch" px={6}>
         {/* Logo Section */}

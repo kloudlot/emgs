@@ -18,6 +18,7 @@ import {
   Flex,
   Badge,
   Spinner,
+  Icon,
 } from "@chakra-ui/react";
 import {
   ArrowLeft,
@@ -28,6 +29,8 @@ import {
   Upload,
   Edit,
   Trash2,
+  CloudUpload,
+  Circle,
 } from "lucide-react";
 import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
@@ -286,7 +289,7 @@ export default function CreateServicePage() {
             bg="brand.500"
             color="white"
           />
-          <Heading size="lg">Create Service</Heading>
+          <Heading size="lg">Add New Service</Heading>
         </HStack>
         <HStack spacing={3}>
           <CustomButton
@@ -327,331 +330,292 @@ export default function CreateServicePage() {
             placeholder="e.g., Basic IELTS Prep"
           />
         </FormControl>
-
         <FormControl isRequired>
-          <FormLabel>Service Description</FormLabel>
+          <FormLabel>Slug</FormLabel>
           <Input
-            name="description"
-            value={formData.description}
+            name="slug"
+            value={formData.slug}
             onChange={handleInputChange}
-            placeholder="e.g., Basic IELTS Prep Description"
+            placeholder="basic-ielts-prep"
           />
         </FormControl>
 
-           <FormControl isRequired>
-                <FormLabel>Slug</FormLabel>
-                <Input
-                  name="slug"
-                  value={formData.slug}
-                  onChange={handleInputChange}
-                  placeholder="basic-ielts-prep"
-                />
-              </FormControl>
+        <FormControl>
+          <FormLabel>Description</FormLabel>
+          <Textarea
+            name="description"
+            value={formData.description}
+            onChange={handleInputChange}
+            rows={4}
+            placeholder="Brief description of the service..."
+          />
+        </FormControl>
 
-              <FormControl isRequired>
-                <FormLabel>Overview</FormLabel>
-                <Textarea
-                  name="overview"
-                  value={formData.overview}
-                  onChange={handleInputChange}
-                  rows={6}
-                  placeholder="This comprehensive preparation program is designed to help you excel..."
-                />
-              </FormControl>
+        <FormControl>
+          <FormLabel>Description</FormLabel>
+          <Textarea
+            name="description"
+            value={formData.description}
+            onChange={handleInputChange}
+            rows={4}
+            placeholder="Brief description of the service..."
+          />
+        </FormControl>
       </SimpleGrid>
-
-      {/* old */}
       <SimpleGrid columns={[1, 1, 2]} spacing={6}>
-        {/* Left Column - Overview */}
-        <VStack align="stretch" spacing={6}>
-          <Box
-            bg="white"
-            p={6}
-            borderRadius="16px"
-            border="1px solid"
-            borderColor="gray.100"
-          >
-            <VStack align="stretch" spacing={4}>
-              <Heading size="md" fontSize="18px" mb={2}>
-                Overview
-                <Badge ml={2} colorScheme="red">
-                  Required
-                </Badge>
-              </Heading>
+        <FormControl isRequired>
+          <FormLabel>Overview</FormLabel>
+          <Textarea
+            name="overview"
+            value={formData.overview}
+            onChange={handleInputChange}
+            rows={6}
+            placeholder="This comprehensive preparation program is designed to help you excel..."
+          />
+        </FormControl>
+        <Box>
+          <FormControl isRequired>
+            <FormLabel>What's Included</FormLabel>
+          </FormControl>
 
-              <FormControl isRequired>
-                <FormLabel>Service Title</FormLabel>
+          <VStack align="stretch" spacing={3}>
+            {whatsIncluded.map((item, index) => (
+              <HStack key={index} spacing={2}>
                 <Input
-                  name="title"
-                  value={formData.title}
-                  onChange={handleInputChange}
-                  placeholder="e.g., Basic IELTS Prep"
+                  value={item}
+                  onChange={(e) =>
+                    handleIncludedItemChange(index, e.target.value)
+                  }
+                  placeholder="e.g., 1-on-1 speaking coaching sessions"
                 />
-              </FormControl>
-
-              <FormControl isRequired>
-                <FormLabel>Slug</FormLabel>
-                <Input
-                  name="slug"
-                  value={formData.slug}
-                  onChange={handleInputChange}
-                  placeholder="basic-ielts-prep"
+                <IconButton
+                  aria-label="Remove item"
+                  icon={<Trash2 size={18} />}
+                  size="sm"
+                  colorScheme="brand"
+                  color={"#E31D1C"}
+                  variant="ghost"
+                  onClick={() => handleRemoveIncludedItem(index)}
+                  isDisabled={whatsIncluded.length === 1}
+                  _hover={{
+                    bg: "brand.500",
+                    color: "white",
+                  }}
                 />
-              </FormControl>
-
-              <FormControl isRequired>
-                <FormLabel>Overview</FormLabel>
-                <Textarea
-                  name="overview"
-                  value={formData.overview}
-                  onChange={handleInputChange}
-                  rows={6}
-                  placeholder="This comprehensive preparation program is designed to help you excel..."
-                />
-              </FormControl>
-
-              <FormControl>
-                <FormLabel>Description</FormLabel>
-                <Textarea
-                  name="description"
-                  value={formData.description}
-                  onChange={handleInputChange}
-                  rows={8}
-                  placeholder="Detailed description of the service..."
-                />
-              </FormControl>
-
-              <FormControl>
-                <FormLabel>Status</FormLabel>
-                <Select
-                  name="status"
-                  value={formData.status}
-                  onChange={handleInputChange}
-                >
-                  <option value="draft">Draft</option>
-                  <option value="published">Published</option>
-                  <option value="archived">Archived</option>
-                </Select>
-              </FormControl>
-            </VStack>
-          </Box>
-
-          {/* Service Images */}
-          <Box
-            bg="white"
-            p={6}
-            borderRadius="16px"
-            border="1px solid"
-            borderColor="gray.100"
+              </HStack>
+            ))}
+          </VStack>
+          <Button
+            size="sm"
+            leftIcon={<Plus size={16} />}
+            colorScheme="brand"
+            variant="link"
+            onClick={handleAddIncludedItem}
+            _hover={{
+              textDecoration: "none",
+              color: "brand.500",
+            }}
+            mt={2}
+            fontWeight={400}
           >
-            <Heading size="md" fontSize="18px" mb={4}>
-              Service Images
-              <Badge ml={2} colorScheme="orange">
-                Optional
-              </Badge>
-            </Heading>
-
-            <Box
-              border="2px dashed"
-              borderColor="gray.300"
-              borderRadius="12px"
-              p={8}
-              textAlign="center"
-              cursor="pointer"
-              _hover={{ borderColor: "brand.500", bg: "gray.50" }}
-              onClick={handleImageUploadClick}
-            >
-              {uploadingImages ? (
-                <VStack spacing={2}>
-                  <Spinner size="lg" color="brand.500" />
-                  <Text fontSize="sm" color="gray.600">
-                    Uploading images...
-                  </Text>
-                </VStack>
-              ) : (
-                <VStack spacing={2}>
-                  <Upload size={32} color="#999" />
-                  <Text fontSize="sm" color="gray.600">
-                    Click to upload images
-                  </Text>
-                  <Text fontSize="xs" color="gray.400">
-                    .jpeg, .jpg, .png (multiple files supported)
-                  </Text>
-                </VStack>
-              )}
-            </Box>
-
-            {serviceImages.length > 0 && (
-              <SimpleGrid columns={3} spacing={4} mt={4}>
-                {serviceImages.map((img, idx) => (
-                  <Box key={idx} position="relative">
-                    <Image
-                      src={getImageUrl(img, 300)}
-                      alt={`Service image ${idx + 1}`}
-                      borderRadius="8px"
-                      objectFit="cover"
-                      h="100px"
-                      w="100%"
-                    />
-                    <IconButton
-                      aria-label="Remove image"
-                      icon={<X size={16} />}
-                      size="xs"
-                      position="absolute"
-                      top={2}
-                      right={2}
-                      colorScheme="red"
-                      onClick={() => handleRemoveImage(idx)}
-                    />
-                  </Box>
-                ))}
-              </SimpleGrid>
-            )}
-          </Box>
-        </VStack>
-
-        {/* Right Column - What's Included */}
-        <VStack align="stretch" spacing={6}>
+            Add New Option
+          </Button>
+        </Box>
+      </SimpleGrid>
+      <Flex gap={4} flexDirection={["column", "column", "row"]}>
+        <FormControl maxW={["100%", "100%", "350px"]} isRequired>
+          <FormLabel fontSize={"16px"}>Service Images</FormLabel>
           <Box
-            bg="white"
-            p={6}
-            borderRadius="16px"
             border="1px solid"
-            borderColor="gray.100"
+            borderColor="gray.300"
+            borderRadius="12px"
+            p={8}
+            textAlign="center"
           >
-            <Flex justify="space-between" align="center" mb={4}>
-              <Heading size="md" fontSize="18px">
-                What's Included
-                <Badge ml={2} colorScheme="orange">
-                  Optional
-                </Badge>
-              </Heading>
-              <Button
-                size="sm"
-                leftIcon={<Plus size={16} />}
-                colorScheme="red"
-                variant="link"
-                onClick={handleAddIncludedItem}
-              >
-                Add New Option
-              </Button>
-            </Flex>
-
-            <VStack align="stretch" spacing={3}>
-              {whatsIncluded.map((item, index) => (
-                <HStack key={index} spacing={2}>
-                  <Input
-                    value={item}
-                    onChange={(e) =>
-                      handleIncludedItemChange(index, e.target.value)
-                    }
-                    placeholder="e.g., 1-on-1 speaking coaching sessions"
-                  />
-                  <IconButton
-                    aria-label="Remove item"
-                    icon={<X size={18} />}
-                    size="sm"
-                    colorScheme="red"
-                    variant="ghost"
-                    onClick={() => handleRemoveIncludedItem(index)}
-                    isDisabled={whatsIncluded.length === 1}
-                  />
-                </HStack>
-              ))}
-            </VStack>
-          </Box>
-
-          {/* Services Packages Section */}
-          <Box
-            bg="white"
-            p={6}
-            borderRadius="16px"
-            border="1px solid"
-            borderColor="gray.100"
-          >
-            <Flex justify="space-between" align="center" mb={4}>
-              <Heading size="md" fontSize="18px">
-                Services Packages
-              </Heading>
-              <Button
-                size="sm"
-                colorScheme="red"
-                leftIcon={<Plus size={16} />}
-                onClick={handleAddPackage}
-              >
-                Add Package
-              </Button>
-            </Flex>
-
-            {packages.length === 0 ? (
-              <Text color="gray.500" fontSize="sm">
-                No packages added yet. Click "Add Package" to create pricing
-                tiers.
-              </Text>
+            {uploadingImages ? (
+              <VStack spacing={2}>
+                <Spinner size="lg" color="brand.500" />
+                <Text fontSize="sm" color="gray.600">
+                  Uploading images...
+                </Text>
+              </VStack>
             ) : (
-              <VStack spacing={3} align="stretch">
-                {packages.map((pkg, index) => (
-                  <Box
-                    key={index}
-                    p={4}
-                    border="1px solid"
-                    borderColor="gray.200"
-                    borderRadius="8px"
-                    _hover={{ borderColor: "brand.500" }}
-                  >
-                    <Flex justify="space-between" align="start">
-                      <HStack spacing={3} flex={1}>
-                        {pkg.image && (
-                          <Image
-                            src={getImageUrl(pkg.image, 80)}
-                            alt={pkg.name}
-                            w="60px"
-                            h="60px"
-                            objectFit="cover"
-                            borderRadius="6px"
-                          />
-                        )}
-                        <VStack align="start" spacing={1} flex={1}>
-                          <Text fontWeight="600" fontSize="md">
-                            {pkg.name}
-                          </Text>
-                          <Text fontSize="sm" color="gray.600" noOfLines={2}>
-                            {pkg.description || "No description"}
-                          </Text>
-                          <HStack spacing={2}>
-                            <Badge colorScheme="blue">{pkg.packageType}</Badge>
-                            <Text fontWeight="600" color="brand.500">
-                              {pkg.currency}{" "}
-                              {parseFloat(pkg.price).toLocaleString()}
-                            </Text>
-                          </HStack>
-                        </VStack>
-                      </HStack>
-                      <HStack spacing={1}>
-                        <IconButton
-                          aria-label="Edit package"
-                          icon={<Edit size={16} />}
-                          size="sm"
-                          variant="ghost"
-                          onClick={() => handleEditPackage(pkg, index)}
-                        />
-                        <IconButton
-                          aria-label="Delete package"
-                          icon={<Trash2 size={16} />}
-                          size="sm"
-                          variant="ghost"
-                          colorScheme="red"
-                          onClick={() => handleDeletePackage(index)}
-                        />
-                      </HStack>
-                    </Flex>
-                  </Box>
-                ))}
+              <VStack spacing={2}>
+                <CloudUpload size={32} color="#999" />
+                <Text fontSize="sm" color="gray.600">
+                  Upload your image here
+                </Text>
+                <Text fontSize="xs" color="gray.400">
+                  JPEG,JPG,PNG
+                </Text>
+                <Button
+                  size="sm"
+                  colorScheme="brand"
+                  onClick={handleImageUploadClick}
+                  _hover={{
+                    textDecoration: "none",
+                    color: "white",
+                  }}
+                  mt={2}
+                  fontWeight={400}
+                  borderRadius={"sm"}
+                  px={6}
+                >
+                  Browse
+                </Button>
               </VStack>
             )}
           </Box>
-        </VStack>
-      </SimpleGrid>
+        </FormControl>
+        <Box pt={6}>
+          {serviceImages.length > 0 && (
+            <SimpleGrid columns={3} spacing={4} mt={4}>
+              {serviceImages.map((img, idx) => (
+                <Box key={idx} position="relative">
+                  <Image
+                    src={getImageUrl(img, 300)}
+                    alt={`Service image ${idx + 1}`}
+                    borderRadius="8px"
+                    objectFit="cover"
+                    h="100px"
+                    w="100%"
+                  />
+                  <IconButton
+                    aria-label="Remove image"
+                    icon={<X size={16} />}
+                    size="xs"
+                    position="absolute"
+                    top={2}
+                    right={2}
+                    colorScheme="red"
+                    onClick={() => handleRemoveImage(idx)}
+                  />
+                </Box>
+              ))}
+            </SimpleGrid>
+          )}
+        </Box>
+      </Flex>
+
+      <Box>
+        <HStack justifyContent={"space-between"} mb={4}>
+          <Text>Service Packages</Text>
+          <Button
+            size={"sm"}
+            borderRadius={"sm"}
+            onClick={handleAddPackage}
+            colorScheme="brand"
+            px={4}
+          >
+            Add Package
+          </Button>
+        </HStack>
+        {packages.length === 0 ? (
+          <Box
+            w={"280px"}
+            h={"324px"}
+            bg={"#F9FAFB"}
+            borderRadius={"12px"}
+            display={"flex"}
+            alignItems={"center"}
+            justifyContent={"center"}
+            flexDirection={"column"}
+            p={4}
+            gap={4}
+          >
+            <Icon as={Plus} color={"#03453B"} size={24} />
+            <Text color="gray.500" fontSize="sm">
+              No Package added yet
+            </Text>
+            <Button
+              size={"sm"}
+              borderRadius={"sm"}
+              onClick={handleAddPackage}
+              colorScheme="brand"
+              px={4}
+            >
+              Create One
+            </Button>
+          </Box>
+        ) : (
+          <SimpleGrid spacing={3} columns={[1, 2, 4]}>
+            {packages.map((pkg, index) => (
+              <VStack key={index} maxW={"280px"} color={"#03453B"}>
+                {pkg.image && (
+                  <Image
+                    src={getImageUrl(pkg.image, 80)}
+                    alt={pkg.name}
+                    w="100%"
+                    maxW={"280px"}
+                    h="168px"
+                    objectFit="cover"
+                    borderRadius="6px"
+                  />
+                )}
+                <VStack align="start" spacing={2} flex={1} w={"100%"}>
+                  <HStack justifyContent={"space-between"} w={"100%"} gap={1}>
+                    <Text fontSize={["sm", "md"]} color="#03453B">
+                      {pkg.name}
+                    </Text>
+                    <Text color="#03453B">
+                      {pkg.currency} {parseFloat(pkg.price).toLocaleString()}
+                    </Text>
+                  </HStack>
+                  <Text fontSize={["xs", "13px"]} noOfLines={2}>
+                    {pkg.description || "No description"}
+                  </Text>
+                  {pkg.features?.length > 0 && (
+                    <VStack align="start" spacing={2} flex={1} w={"100%"}>
+                      {pkg.features.map((feature: any, index: number) => (
+                        <HStack key={index} spacing={2}>
+                          <Icon
+                            as={Circle}
+                            color="brand.500"
+                            w={2}
+                            h={2}
+                            fill={"brand.500"}
+                          />
+                          <Text fontSize={["13px"]} noOfLines={2}>
+                            {feature}
+                          </Text>
+                        </HStack>
+                      ))}
+                    </VStack>
+                  )}
+                </VStack>
+
+                <HStack spacing={1} w={"full"} mt={4}>
+                  <Button
+                    aria-label="Edit package"
+                    size="sm"
+                    variant="ghost"
+                    onClick={() => handleEditPackage(pkg, index)}
+                    flex={1}
+                    bg={"#A70B1C0A"}
+                    borderRadius={"sm"}
+                    _hover={{
+                      bg: "#A70B1C0A",
+                    }}
+                    fontWeight={400}
+                  >
+                    Edit
+                  </Button>
+
+                  <IconButton
+                    aria-label="Delete package"
+                    icon={<Trash2 size={16} />}
+                    size="sm"
+                    colorScheme="brand"
+                    bg={"#E31D1C"}
+                    onClick={() => handleDeletePackage(index)}
+                    borderRadius={"sm"}
+                  />
+                </HStack>
+              </VStack>
+            ))}
+          </SimpleGrid>
+        )}
+      </Box>
 
       {/* Package Modal */}
       <PackageModal

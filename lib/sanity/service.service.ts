@@ -137,6 +137,43 @@ export async function getServiceBySlug(slug: string) {
 
 // Create service
 export async function createService(data: CreateServiceDto) {
+  // Handle packages - check if they're objects or IDs
+  let packageRefs: any[] = [];
+  
+  if (data.packages && data.packages.length > 0) {
+    if (typeof data.packages[0] === 'object') {
+      // Packages are full objects, need to create them first
+      packageRefs = await Promise.all(
+        data.packages.map(async (pkg: any) => {
+          // Create new package
+          const newPackage = await createPackage({
+            name: pkg.name,
+            price: parseFloat(pkg.price),
+            currency: pkg.currency || 'USD',
+            packageType: pkg.packageType || 'basic',
+            description: pkg.description || '',
+            features: pkg.features || [],
+            image: pkg.image,
+            popular: pkg.popular || false,
+            active: pkg.active !== undefined ? pkg.active : true,
+          });
+          return {
+            _key: crypto.randomUUID(),
+            _type: 'reference',
+            _ref: newPackage._id,
+          };
+        })
+      );
+    } else {
+      // Packages are already IDs
+      packageRefs = data.packages.map((id) => ({
+        _key: crypto.randomUUID(),
+        _type: 'reference',
+        _ref: id,
+      }));
+    }
+  }
+
   return sanityClient.create({
     _type: 'service',
     title: data.title,
@@ -154,11 +191,7 @@ export async function createService(data: CreateServiceDto) {
       _key: crypto.randomUUID(),
       ...img,
     })) || [],
-    packages: data.packages?.map((id) => ({
-      _key: crypto.randomUUID(),
-      _type: 'reference',
-      _ref: id,
-    })) || [],
+    packages: packageRefs,
     status: data.status || 'draft',
     featured: data.featured || false,
     ...(data.category && {
@@ -266,6 +299,7 @@ export interface CreatePackageDto {
   packageType?: 'basic' | 'standard' | 'premium';
   description?: string;
   features?: Array<{ feature: string; quantity?: string }>;
+  image?: any;
   popular?: boolean;
   active?: boolean;
 }
@@ -286,6 +320,7 @@ export async function createPackage(data: CreatePackageDto) {
       _key: crypto.randomUUID(),
       ...feature,
     })) || [],
+    ...(data.image && { image: data.image }),
     popular: data.popular || false,
     active: data.active !== undefined ? data.active : true,
   });

@@ -21,7 +21,7 @@ import {
   Spinner,
   Select,
 } from "@chakra-ui/react";
-import { Upload, X, Plus } from "lucide-react";
+import { Upload, X, Plus, Trash2 } from "lucide-react";
 import { useState, useRef } from "react";
 
 interface PackageFormData {
@@ -158,9 +158,9 @@ export default function PackageModal({
 
           <VStack spacing={4} align="stretch">
             {/* Package Image */}
-            <FormControl>
+            <FormControl isRequired>
               <FormLabel fontSize="sm" color="gray.600">
-                Package Image <Badge colorScheme="red" ml={1}>Required</Badge>
+                Package Image
               </FormLabel>
               
               {formData.image ? (
@@ -199,7 +199,7 @@ export default function PackageModal({
                 </Box>
               ) : (
                 <Box
-                  border="2px dashed"
+                  border="1px solid"
                   borderColor="gray.300"
                   borderRadius="8px"
                   p={6}
@@ -224,7 +224,7 @@ export default function PackageModal({
                       <Text fontSize="xs" color="gray.400">
                         .jpeg, .jpg, .png
                       </Text>
-                      <Button size="sm" colorScheme="red" mt={2}>
+                      <Button size="sm" borderRadius={"sm"} colorScheme="brand" mt={2} px={6}>
                         Browse
                       </Button>
                     </VStack>
@@ -253,11 +253,18 @@ export default function PackageModal({
                 onChange={handleInputChange}
                 rows={3}
                 placeholder="Best for self-paced learners, Which includes:"
+                colorScheme="brand"
+                outline={"none"}
+                _focus={{
+                  outline: "none",
+                  boxShadow: "none",
+                  borderColor: "brand.300",
+                }}
               />
             </FormControl>
 
-            {/* Package Type */}
-            <FormControl>
+            {/* Package Type NOT NEEDED FOR NOW */}
+            {/* <FormControl>
               <FormLabel fontSize="sm" color="gray.600">Package Type</FormLabel>
               <Select
                 name="packageType"
@@ -268,7 +275,7 @@ export default function PackageModal({
                 <option value="standard">Standard</option>
                 <option value="premium">Premium</option>
               </Select>
-            </FormControl>
+            </FormControl> */}
 
             {/* Options/Features */}
             <FormControl>
@@ -284,7 +291,7 @@ export default function PackageModal({
                     />
                     <IconButton
                       aria-label="Remove option"
-                      icon={<X size={16} />}
+                      icon={<Trash2 size={16} />}
                       size="sm"
                       colorScheme="red"
                       variant="ghost"
@@ -297,9 +304,11 @@ export default function PackageModal({
                   size="sm"
                   leftIcon={<Plus size={16} />}
                   variant="link"
-                  colorScheme="red"
+                  colorScheme="brand"
                   onClick={handleAddFeature}
                   alignSelf="flex-start"
+                  fontWeight={400}
+                  fontSize={"13px"}
                 >
                   Add New Option
                 </Button>

@@ -9,7 +9,7 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   return (
-    <Flex minH="100vh" bg="#F9FAFB">
+    <Flex minH="100vh" bg="#FFFFFF">
       {/* Sidebar - Fixed width sidebar */}
       <AdminSidebar />
 
