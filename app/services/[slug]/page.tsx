@@ -101,7 +101,7 @@ const ServiceDetailsPage = async ({ params }: ServicePageProps) => {
         {/* Service Packages Section */}
         {service.packages && service.packages.length > 0 && (
           <Box>
-            <Heading size="lg" mb={8} fontWeight="600">
+            <Heading size="md" fontSize={"20px"} mb={8} fontWeight="600">
               Services Packages
             </Heading>
             <SimpleGrid columns={[1, 2, 3]} spacing={6} >

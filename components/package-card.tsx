@@ -1,3 +1,4 @@
+"use client";
 import {
   Box,
   Flex,
@@ -12,8 +13,7 @@ import {
   IconButton,
 } from "@chakra-ui/react";
 import { getImageUrl } from "@/lib/sanity/image.service";
-import { Check, Circle } from "lucide-react";
-import CustomButton from "./custom-button";
+import { ArrowUp, Circle, ShoppingCart } from "lucide-react";
 
 interface PackageFeature {
   feature: string;
@@ -52,18 +52,16 @@ const PackageCard = ({
           ? "£"
           : "€";
 
-  console.log("features", features, image);
-
   return (
     <>
-      <VStack maxW={"280px"} color={"#1a1a1a"}>
+      <VStack maxW={"380px"} color={"#1a1a1a"}>
         {image && (
           <Image
             src={getImageUrl(image, 80)}
             alt={name}
             w="100%"
-            maxW={"280px"}
-            h="168px"
+            maxW={"380px"}
+            h="233px"
             objectFit="cover"
             borderRadius="6px"
           />
@@ -83,9 +81,14 @@ const PackageCard = ({
           {features.length > 0 && (
             <VStack align="start" spacing={2} mb={4}>
               {features.slice(0, 3).map((feature, index) => (
-                <HStack key={feature._key || index} spacing={2} align="start">
+                <HStack
+                  key={feature._key || index}
+                  spacing={2}
+                  align="start"
+                  alignItems={"center"}
+                >
                   <Box mt={0.5}>
-                    <Check size={16} color="#A70B1C" />
+                    <Circle size={8} fill="#A70B1C" color="#A70B1C" />
                   </Box>
                   <Text fontSize="sm" color="gray.700">
                     {feature.quantity && (
@@ -106,34 +109,36 @@ const PackageCard = ({
           )}
         </VStack>
 
-        <HStack spacing={1} w={"full"} mt={4}>
+        <HStack spacing={2} w={"full"} mt={4}>
           <Button
             aria-label="Edit package"
             size="sm"
-            variant="ghost"
-            // onClick={() => handleEditPackage(pkg, index)}
-            bg={"#A70B1C0A"}
-            borderRadius={"sm"}
-            _hover={{
-              bg: "#A70B1C0A",
-            }}
+            variant="outline"
+            borderRadius={"md"}
             fontWeight={400}
             flex={1}
+            borderColor={"#A70B1C"}
+            _hover={{
+              borderColor: "#A70B1C",
+              bg:"transparent"
+            }}
+            rightIcon={<Icon as={ArrowUp} transform="rotate(45deg)" />}
           >
             Purchase Package
           </Button>
           <Button
             aria-label="Edit package"
             size="sm"
-            variant="ghost"
-            // onClick={() => handleEditPackage(pkg, index)}
-            bg={"#A70B1C0A"}
-            borderRadius={"sm"}
-            _hover={{
-              bg: "#A70B1C0A",
-            }}
+            variant="outline"
+            borderRadius={"md"}
             fontWeight={400}
             flex={1}
+            borderColor={"#A70B1C"}
+            _hover={{
+              borderColor: "#A70B1C",
+              bg:"transparent"
+            }}
+            rightIcon={<Icon as={ShoppingCart} />}
           >
             Add to Cart
           </Button>
