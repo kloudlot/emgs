@@ -498,7 +498,7 @@ export default function EditServicePage() {
                         <HStack key={fIdx} spacing={2}>
                           <Box w="6px" h="6px" borderRadius="full" bg="red.500" flexShrink={0} />
                           <Text fontSize="sm" color="gray.700">
-                            {feature.feature || feature}
+                            {/* {feature.feature || feature} */}
                           </Text>
                         </HStack>
                       ))}
