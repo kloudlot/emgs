@@ -9,10 +9,10 @@ const CustomButton = ({ text, onClick, ...props }: CustomButtonProps) => {
   return (
     <Button
       colorScheme="brand"
-      height={"60px"}
+      height={"40px"}
       px={"12"}
       borderRadius={"full"}
-      fontSize={"lg"}
+      fontSize={"md"}
       fontWeight={"bold"}
       _hover={{
         bg: "brand.600",

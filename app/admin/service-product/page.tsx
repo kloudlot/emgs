@@ -29,9 +29,13 @@ import {
   Eye,
   ChevronDown,
   MoreVertical,
+  Upload,
+  Download,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import PageTitle from "@/components/page-title";
+import CustomButton from "@/components/custom-button";
 
 interface Service {
   _id: string;
@@ -120,12 +124,86 @@ export default function ServiceProductPage() {
     }
   };
 
+  const handlePublish = async (id: string) => {
+    try {
+      const response = await fetch(`/api/services/${id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: "published" }),
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        toast({
+          title: "Success",
+          description: "Service published successfully",
+          status: "success",
+          duration: 3000,
+        });
+        fetchServices();
+      } else {
+        toast({
+          title: "Error",
+          description: result.message || "Failed to publish service",
+          status: "error",
+          duration: 3000,
+        });
+      }
+    } catch (error) {
+      console.error("Error publishing service:", error);
+      toast({
+        title: "Error",
+        description: "Failed to publish service",
+        status: "error",
+        duration: 3000,
+      });
+    }
+  };
+
+  const handleUnpublish = async (id: string) => {
+    try {
+      const response = await fetch(`/api/services/${id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: "draft" }),
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        toast({
+          title: "Success",
+          description: "Service unpublished successfully",
+          status: "success",
+          duration: 3000,
+        });
+        fetchServices();
+      } else {
+        toast({
+          title: "Error",
+          description: result.message || "Failed to unpublish service",
+          status: "error",
+          duration: 3000,
+        });
+      }
+    } catch (error) {
+      console.error("Error unpublishing service:", error);
+      toast({
+        title: "Error",
+        description: "Failed to unpublish service",
+        status: "error",
+        duration: 3000,
+      });
+    }
+  };
+
   const getStatusColor = (status: string) => {
     switch (status) {
       case "published":
-        return "green";
+        return "#09C353";
       case "draft":
-        return "yellow";
+        return "#F3D020";
       case "archived":
         return "gray";
       default:
@@ -135,16 +213,23 @@ export default function ServiceProductPage() {
 
   return (
     <VStack align="stretch" spacing={6}>
-      <Flex justify="space-between" align="center">
-        <Heading size="lg">Service & Product Management</Heading>
-        <Button
-          leftIcon={<Plus size={20} />}
-          colorScheme="red"
-          onClick={() => router.push("/admin/service-product/create")}
-        >
-          Add Service
-        </Button>
-      </Flex>
+      <PageTitle>
+        <PageTitle.Left>
+          <PageTitle.Header
+            title="Service & Product"
+            description="Manage all content for your platform. Handle posts, drafts, media, and settings in one organized space for quick updates."
+          />
+        </PageTitle.Left>
+        <PageTitle.Right>
+          <CustomButton
+            colorScheme="brand"
+            onClick={() => router.push("/admin/service-product/create")}
+            px={6}
+            borderRadius={"sm"}
+            text="Add New Service"
+          />
+        </PageTitle.Right>
+      </PageTitle>
 
       {loading ? (
         <Flex justify="center" align="center" minH="400px">
@@ -171,22 +256,18 @@ export default function ServiceProductPage() {
           </Button>
         </Box>
       ) : (
-        <Box
-          bg="white"
-          p={6}
-          borderRadius="16px"
-          boxShadow="sm"
-          border="1px solid"
-          borderColor="gray.100"
-          overflowX="auto"
-        >
+        <Box bg="white" pt={6} overflowX="auto">
           <Table variant="simple">
             <Thead bg="gray.50">
               <Tr textTransform={"none"}>
                 <Th textTransform={"none"}>Title</Th>
                 <Th textTransform={"none"}>Description</Th>
-                <Th textTransform={"none"} textAlign={"center"}>Service Packages</Th>
-                <Th textTransform={"none"} textAlign={"center"}>Status</Th>
+                <Th textTransform={"none"} textAlign={"center"}>
+                  Service Packages
+                </Th>
+                <Th textTransform={"none"} textAlign={"center"}>
+                  Status
+                </Th>
                 <Th textTransform={"none"}>Actions</Th>
               </Tr>
             </Thead>
@@ -197,7 +278,14 @@ export default function ServiceProductPage() {
                   <Td>{service.description}</Td>
                   <Td textAlign={"center"}>{service.packages?.length || 0}</Td>
                   <Td textAlign={"center"}>
-                    <Badge colorScheme={getStatusColor(service.status)}>
+                    <Badge
+                      bg={getStatusColor(service.status)}
+                      py={2}
+                      px={6}
+                      borderRadius={"full"}
+                      color={"#fff"}
+                      textTransform={"capitalize"}
+                    >
                       {service.status}
                     </Badge>
                   </Td>
@@ -211,17 +299,7 @@ export default function ServiceProductPage() {
                         w={"40px"}
                         h={"40px"}
                       />
-                      <MenuList>
-                        <MenuItem
-                          icon={<Eye size={16} />}
-                          onClick={() =>
-                            router.push(
-                              `/admin/service-product/view/${service._id}`,
-                            )
-                          }
-                        >
-                          View
-                        </MenuItem>
+                      <MenuList px={2}>
                         <MenuItem
                           icon={<Edit size={16} />}
                           onClick={() =>
@@ -229,15 +307,61 @@ export default function ServiceProductPage() {
                               `/admin/service-product/edit/${service._id}`,
                             )
                           }
+                          bg={"#fafaff"}
+                          mb={2}
+                          color={"#7d7d80"}
+                          fontSize={"13px"}
                         >
-                          Edit
+                          Edit Service
                         </MenuItem>
                         <MenuItem
-                          icon={<Trash2 size={16} />}
-                          color="red.500"
-                          onClick={() => handleDelete(service._id)}
+                          icon={<Eye size={16} />}
+                          onClick={() =>
+                            router.push(
+                              `/admin/service-product/view/${service._id}`,
+                            )
+                          }
+                          bg={"#fafaff"}
+                          mb={2}
+                          color={"#7d7d80"}
+                          fontSize={"13px"}
                         >
-                          Delete
+                          Preview
+                        </MenuItem>
+
+                        {service.status === "published" ? (
+                          <MenuItem
+                            icon={<Download size={16} />}
+                            onClick={() => handleUnpublish(service._id)}
+                            bg={"#fafaff"}
+                            mb={2}
+                            color={"#7d7d80"}
+                            fontSize={"13px"}
+                          >
+                            Unpublish
+                          </MenuItem>
+                        ) : (
+                          <MenuItem
+                            icon={<Upload size={16} />}
+                            onClick={() => handlePublish(service._id)}
+                            bg={"#fafaff"}
+                            mb={2}
+                            color={"#7d7d80"}
+                            fontSize={"13px"}
+                          >
+                            Publish
+                          </MenuItem>
+                        )}
+
+                        <MenuItem
+                          icon={<Trash2 size={16} />}
+                          onClick={() => handleDelete(service._id)}
+                          bg={"#fafaff"}
+                          mb={2}
+                          fontSize={"13px"}
+                          color="#ff0000"
+                        >
+                          Delete Service
                         </MenuItem>
                       </MenuList>
                     </Menu>
