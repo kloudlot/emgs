@@ -52,19 +52,7 @@ const PackageCard = ({
           ? "£"
           : "€";
 
-  const getPackageColor = () => {
-    switch (packageType) {
-      case "premium":
-        return "#A70B1C";
-      case "standard":
-        return "#D97706";
-      case "basic":
-      default:
-        return "#6B7280";
-    }
-  };
-
-  console.log("features", features, rest);
+  console.log("features", features);
 
   return (
     <>
