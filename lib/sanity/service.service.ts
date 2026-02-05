@@ -50,7 +50,11 @@ export async function getServices(params?: {
       price,
       currency,
       packageType,
-      features
+      features[] {
+        _key,
+        feature,
+        quantity
+      }
     },
     status,
     featured,
@@ -82,7 +86,11 @@ export async function getServiceById(id: string) {
       currency,
       packageType,
       description,
-      features,
+      features[] {
+        _key,
+        feature,
+        quantity
+      },
       image,
       popular,
       active
@@ -117,7 +125,11 @@ export async function getServiceBySlug(slug: string) {
       currency,
       packageType,
       description,
-      features,
+      features[] {
+        _key,
+        feature,
+        quantity
+      },
       image,
       popular,
       active

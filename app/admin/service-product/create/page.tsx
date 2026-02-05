@@ -576,7 +576,7 @@ export default function CreateServicePage() {
                             fill={"brand.500"}
                           />
                           <Text fontSize={["13px"]} noOfLines={2}>
-                            {feature}
+                            {typeof feature === 'string' ? feature : `${feature.quantity ? feature.quantity + ' ' : ''}${feature.feature}`}
                           </Text>
                         </HStack>
                       ))}

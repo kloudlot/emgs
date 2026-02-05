@@ -24,13 +24,18 @@ import {
 import { Upload, X, Plus, Trash2 } from "lucide-react";
 import { useState, useRef } from "react";
 
+interface PackageFeature {
+  feature: string;
+  quantity?: string;
+}
+
 interface PackageFormData {
   name: string;
   description: string;
   price: string;
   currency: string;
   packageType: string;
-  features: string[];
+  features: PackageFeature[];
   image?: any;
 }
 
@@ -57,7 +62,7 @@ export default function PackageModal({
       price: "",
       currency: "NGN",
       packageType: "basic",
-      features: [""],
+      features: [{ feature: "", quantity: "" }],
       image: null,
     }
   );
@@ -72,7 +77,7 @@ export default function PackageModal({
   const handleAddFeature = () => {
     setFormData((prev) => ({
       ...prev,
-      features: [...prev.features, ""],
+      features: [...prev.features, { feature: "", quantity: "" }],
     }));
   };
 
@@ -83,9 +88,9 @@ export default function PackageModal({
     }));
   };
 
-  const handleFeatureChange = (index: number, value: string) => {
+  const handleFeatureChange = (index: number, field: "feature" | "quantity", value: string) => {
     const updated = [...formData.features];
-    updated[index] = value;
+    updated[index] = { ...updated[index], [field]: value };
     setFormData((prev) => ({ ...prev, features: updated }));
   };
 
@@ -282,23 +287,33 @@ export default function PackageModal({
               <FormLabel fontSize="sm" color="gray.600">Options</FormLabel>
               <VStack spacing={2} align="stretch">
                 {formData.features.map((feature, index) => (
-                  <HStack key={index} spacing={2}>
-                    <Input
-                      value={feature}
-                      onChange={(e) => handleFeatureChange(index, e.target.value)}
-                      placeholder="e.g., 2 speaking sessions"
-                      size="sm"
-                    />
-                    <IconButton
-                      aria-label="Remove option"
-                      icon={<Trash2 size={16} />}
-                      size="sm"
-                      colorScheme="red"
-                      variant="ghost"
-                      onClick={() => handleRemoveFeature(index)}
-                      isDisabled={formData.features.length === 1}
-                    />
-                  </HStack>
+                  <VStack key={index} spacing={2} align="stretch">
+                    <HStack spacing={2}>
+                      <Input
+                        value={feature.feature}
+                        onChange={(e) => handleFeatureChange(index, "feature", e.target.value)}
+                        placeholder="e.g., Speaking coaching sessions"
+                        size="sm"
+                        flex={2}
+                      />
+                      <Input
+                        value={feature.quantity || ""}
+                        onChange={(e) => handleFeatureChange(index, "quantity", e.target.value)}
+                        placeholder="Qty (e.g., 2)"
+                        size="sm"
+                        flex={1}
+                      />
+                      <IconButton
+                        aria-label="Remove option"
+                        icon={<Trash2 size={16} />}
+                        size="sm"
+                        colorScheme="red"
+                        variant="ghost"
+                        onClick={() => handleRemoveFeature(index)}
+                        isDisabled={formData.features.length === 1}
+                      />
+                    </HStack>
+                  </VStack>
                 ))}
                 <Button
                   size="sm"
