@@ -25,7 +25,7 @@ const ServiceDetailsPage = async ({ params }: ServicePageProps) => {
       {/* Page Banner */}
       <PageBanner
         title={service.title}
-        description={service.overview}
+        description={service.description}
         // image={
         //   service.serviceImages?.[0]
         //     ? getImageUrl(service.serviceImages[0], 1200)
@@ -66,25 +66,25 @@ const ServiceDetailsPage = async ({ params }: ServicePageProps) => {
           {/* Right Column - What's Included */}
           <Box>
             {/* Overview Text */}
-            <Box>
-              <Heading size="lg" mb={4} fontWeight="600">
+            <Box mb={"24px"}>
+              <Heading size="lg" mb={"16px"} fontWeight="600">
                 Overview
               </Heading>
-              <Text color="gray.700" lineHeight="1.8" fontSize="md">
+              <Text color="#7C7C7C" lineHeight="1.8" fontSize="md">
                 {service.overview || service.description}
               </Text>
             </Box>
-            <Heading size="lg" mb={6} fontWeight="600">
+            <Heading size="md" fontSize={"20px"}  mb="16px" fontWeight="600">
               What&apos;s Included
             </Heading>
             <VStack align="start" spacing={3}>
               {service.whatsIncluded && service.whatsIncluded.length > 0 ? (
                 service.whatsIncluded.map((item: any, index: number) => (
-                  <HStack key={item._key || index} spacing={3} align="start">
+                  <HStack key={item._key || index} spacing={3} align="center">
                     <Box mt={1.5}>
                       <Circle size={8} fill="#A70B1C" color="#A70B1C" />
                     </Box>
-                    <Text color="gray.700" fontSize="md" lineHeight="1.8">
+                    <Text color="#7C7C7C" fontSize="md" lineHeight="1.8">
                       {item.item}
                     </Text>
                   </HStack>

@@ -52,11 +52,11 @@ const PackageCard = ({
           ? "£"
           : "€";
 
-  console.log("features", features);
+  console.log("features", features, image);
 
   return (
     <>
-      <VStack maxW={"280px"} color={"#03453B"}>
+      <VStack maxW={"280px"} color={"#1a1a1a"}>
         {image && (
           <Image
             src={getImageUrl(image, 80)}
@@ -70,10 +70,10 @@ const PackageCard = ({
         )}
         <VStack align="start" spacing={2} flex={1} w={"100%"}>
           <HStack justifyContent={"space-between"} w={"100%"} gap={1}>
-            <Text fontSize={["sm", "md"]} color="#03453B">
+            <Text fontSize={["sm", "md"]} color="#1a1a1a">
               {name}
             </Text>
-            <Text color="#03453B">
+            <Text color="#1a1a1a">
               {currency} {parseFloat(String(price)).toLocaleString()}
             </Text>
           </HStack>
