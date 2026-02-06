@@ -26,6 +26,7 @@ import {
 import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import CustomButton from "@/components/custom-button";
+import BackButton from "@/components/back-button";
 
 interface BlogSection {
   _key: string;
@@ -256,16 +257,7 @@ export default function CreateBlogPage() {
     <VStack align="stretch" spacing={6}>
       {/* Header */}
       <HStack spacing={4} mb={4}>
-        <IconButton
-          aria-label="Go back"
-          icon={<ArrowLeft size={20} />}
-          onClick={() => router.back()}
-          variant="ghost"
-          borderRadius="full"
-          bg="#A70B1C"
-          color="white"
-          _hover={{ bg: "#8A0916" }}
-        />
+        <BackButton />
         <Heading size="lg" fontWeight="600">
           Add New Post
         </Heading>
@@ -426,7 +418,7 @@ export default function CreateBlogPage() {
                     Featured Image
                   </FormLabel>
                   <Box
-                    border="2px dashed"
+                    border="1px solid"
                     borderColor="gray.300"
                     borderRadius="8px"
                     p={4}
