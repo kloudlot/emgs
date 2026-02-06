@@ -13,17 +13,19 @@ import {
 } from "@chakra-ui/react";
 import { Plus } from "lucide-react";
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
 import { Coupon } from "@/lib/types/coupon";
 import CouponCard from "@/components/coupon-card";
 import EmptyCouponState from "@/components/empty-coupon-state";
 import DeleteCouponModal from "@/components/delete-coupon-modal";
+import CreateCouponModal from "@/components/create-coupon-modal";
 import CustomButton from "@/components/custom-button";
+import { useRouter } from "next/navigation";
 
 export default function AffiliateCouponsPage() {
   const router = useRouter();
   const toast = useToast();
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { isOpen: isDeleteOpen, onOpen: onDeleteOpen, onClose: onDeleteClose } = useDisclosure();
+  const { isOpen: isCreateOpen, onOpen: onCreateOpen, onClose: onCreateClose } = useDisclosure();
   
   const [coupons, setCoupons] = useState<Coupon[]>([]);
   const [loading, setLoading] = useState(true);
@@ -71,7 +73,7 @@ export default function AffiliateCouponsPage() {
 
   const handleDeleteClick = (coupon: Coupon) => {
     setSelectedCoupon(coupon);
-    onOpen();
+    onDeleteOpen();
   };
 
   const handleDeleteConfirm = async () => {
@@ -93,7 +95,7 @@ export default function AffiliateCouponsPage() {
           duration: 3000,
           isClosable: true,
         });
-        onClose();
+        onDeleteClose();
         fetchCoupons(); // Refresh the list
       } else {
         toast({
@@ -116,10 +118,6 @@ export default function AffiliateCouponsPage() {
     } finally {
       setIsDeleting(false);
     }
-  };
-
-  const handleCreateClick = () => {
-    router.push("/admin/affiliate-coupons/create");
   };
 
   if (loading) {
@@ -147,7 +145,7 @@ export default function AffiliateCouponsPage() {
           leftIcon={<Plus size={18} />}
           colorScheme="brand"
           bg="#A70B1C"
-          onClick={handleCreateClick}
+          onClick={onCreateOpen}
           px={6}
           borderRadius="sm"
           _hover={{ bg: "#8A0916" }}
@@ -156,7 +154,7 @@ export default function AffiliateCouponsPage() {
 
       {/* Content */}
       {coupons.length === 0 ? (
-        <EmptyCouponState onCreateClick={handleCreateClick} />
+        <EmptyCouponState onCreateClick={onCreateOpen} />
       ) : (
         <Grid
           templateColumns={["1fr", "1fr", "repeat(2, 1fr)", "repeat(3, 1fr)"]}
@@ -173,10 +171,17 @@ export default function AffiliateCouponsPage() {
         </Grid>
       )}
 
+      {/* Create Modal */}
+      <CreateCouponModal
+        isOpen={isCreateOpen}
+        onClose={onCreateClose}
+        onSuccess={fetchCoupons}
+      />
+
       {/* Delete Modal */}
       <DeleteCouponModal
-        isOpen={isOpen}
-        onClose={onClose}
+        isOpen={isDeleteOpen}
+        onClose={onDeleteClose}
         coupon={selectedCoupon}
         onConfirm={handleDeleteConfirm}
         isDeleting={isDeleting}
@@ -184,3 +189,4 @@ export default function AffiliateCouponsPage() {
     </VStack>
   );
 }
+
