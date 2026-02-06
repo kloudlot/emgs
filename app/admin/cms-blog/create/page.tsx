@@ -16,13 +16,9 @@ import {
   Flex,
   Grid,
   Heading,
+  GridItem,
 } from "@chakra-ui/react";
-import {
-  ArrowLeft,
-  Plus,
-  X,
-  CloudUpload,
-} from "lucide-react";
+import { ArrowLeft, Plus, X, CloudUpload } from "lucide-react";
 import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import CustomButton from "@/components/custom-button";
@@ -40,7 +36,9 @@ export default function CreateBlogPage() {
   const toast = useToast();
   const [loading, setLoading] = useState(false);
   const featuredImageInputRef = useRef<HTMLInputElement>(null);
-  const sectionImageInputRefs = useRef<{ [key: string]: HTMLInputElement | null }>({});
+  const sectionImageInputRefs = useRef<{
+    [key: string]: HTMLInputElement | null;
+  }>({});
 
   const [formData, setFormData] = useState({
     title: "",
@@ -57,13 +55,17 @@ export default function CreateBlogPage() {
   ]);
 
   const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >,
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleFeaturedImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFeaturedImageUpload = (
+    e: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     const file = e.target.files?.[0];
     if (file) {
       setFeaturedImage(file);
@@ -102,7 +104,7 @@ export default function CreateBlogPage() {
   const handleSectionChange = (
     index: number,
     field: "header" | "body",
-    value: string
+    value: string,
   ) => {
     const updated = [...sections];
     updated[index][field] = value;
@@ -111,7 +113,7 @@ export default function CreateBlogPage() {
 
   const handleSectionImageUpload = (
     index: number,
-    e: React.ChangeEvent<HTMLInputElement>
+    e: React.ChangeEvent<HTMLInputElement>,
   ) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -196,7 +198,7 @@ export default function CreateBlogPage() {
             body: section.body,
             featuredImage: uploadedSectionImage,
           };
-        })
+        }),
       );
 
       const slug = formData.title
@@ -263,77 +265,157 @@ export default function CreateBlogPage() {
         </Heading>
       </HStack>
 
-      <Grid templateColumns={["1fr", "1fr", "1fr 380px"]} gap={6}>
-        {/* Left Column - Form Fields */}
-        <VStack align="stretch" spacing={6}>
-          {/* Title */}
-          <FormControl isRequired>
-            <FormLabel fontSize="14px" fontWeight="600">
-              Title
-            </FormLabel>
-            <Input
-              name="title"
-              value={formData.title}
-              onChange={handleInputChange}
-              placeholder="How to Prepare for International Exams: A Step-by-Step Guide"
-              bg="white"
-              borderColor="gray.200"
-            />
-          </FormControl>
+      <Grid templateColumns={["1fr", "1fr", "1fr 1fr"]} gap={6}>
+        <GridItem>
+          <VStack spacing={6}>
+            {/* Title */}
+            <FormControl isRequired>
+              <FormLabel fontSize="14px" fontWeight="600">
+                Title
+              </FormLabel>
+              <Input
+                name="title"
+                value={formData.title}
+                onChange={handleInputChange}
+                placeholder="How to Prepare for International Exams: A Step-by-Step Guide"
+                bg="white"
+                borderColor="gray.200"
+              />
+            </FormControl>
 
-          {/* Category */}
-          <FormControl isRequired>
-            <FormLabel fontSize="14px" fontWeight="600">
-              Category
-            </FormLabel>
-            <Select
-              name="category"
-              value={formData.category}
-              onChange={handleInputChange}
-              placeholder="Select category"
-              bg="white"
-              borderColor="gray.200"
-            >
-              <option value="exam-certification-prep">
-                Exam & Certification Prep
-              </option>
-              <option value="career-development">Career Development</option>
-              <option value="study-tips">Study Tips</option>
-              <option value="technology">Technology</option>
-              <option value="general">General</option>
-            </Select>
-          </FormControl>
+            {/* Category */}
+            <FormControl isRequired>
+              <FormLabel fontSize="14px" fontWeight="600">
+                Category
+              </FormLabel>
+              <Select
+                name="category"
+                value={formData.category}
+                onChange={handleInputChange}
+                placeholder="Select category"
+                bg="white"
+                borderColor="gray.200"
+              >
+                <option value="exam-certification-prep">
+                  Exam & Certification Prep
+                </option>
+                <option value="career-development">Career Development</option>
+                <option value="study-tips">Study Tips</option>
+                <option value="technology">Technology</option>
+                <option value="general">General</option>
+              </Select>
+            </FormControl>
 
-          {/* Tags */}
-          <FormControl isRequired>
-            <FormLabel fontSize="14px" fontWeight="600">
-              Tags
-            </FormLabel>
-            <Input
-              name="tags"
-              value={formData.tags}
-              onChange={handleInputChange}
-              placeholder="how, exam, preparation (comma separated)"
-              bg="white"
-              borderColor="gray.200"
-            />
-          </FormControl>
+            {/* Tags */}
+            <FormControl isRequired>
+              <FormLabel fontSize="14px" fontWeight="600">
+                Tags
+              </FormLabel>
+              <Input
+                name="tags"
+                value={formData.tags}
+                onChange={handleInputChange}
+                placeholder="how, exam, preparation (comma separated)"
+                bg="white"
+                borderColor="gray.200"
+              />
+            </FormControl>
 
-          {/* Published Date */}
-          <FormControl isRequired>
-            <FormLabel fontSize="14px" fontWeight="600">
-              Published date
-            </FormLabel>
-            <Input
-              name="publishedDate"
-              type="date"
-              value={formData.publishedDate}
-              onChange={handleInputChange}
-              bg="white"
-              borderColor="gray.200"
-            />
-          </FormControl>
-
+            {/* Published Date */}
+            <FormControl isRequired>
+              <FormLabel fontSize="14px" fontWeight="600">
+                Published date
+              </FormLabel>
+              <Input
+                name="publishedDate"
+                type="date"
+                value={formData.publishedDate}
+                onChange={handleInputChange}
+                bg="white"
+                borderColor="gray.200"
+              />
+            </FormControl>
+          </VStack>
+        </GridItem>
+        <GridItem>
+          {/* Right Column - Featured Image */}
+          <VStack align="stretch" spacing={4}>
+            <FormControl>
+              <FormLabel fontSize="14px" fontWeight="600">
+                Featured Image
+              </FormLabel>
+              <Box
+                border="1px solid"
+                borderColor="gray.300"
+                borderRadius="8px"
+                p={6}
+                textAlign="center"
+                bg="gray.50"
+                position="relative"
+                minH="300px"
+                display="flex"
+                flexDirection="column"
+                alignItems="center"
+                justifyContent="center"
+              >
+                {featuredImagePreview ? (
+                  <>
+                    <Image
+                      src={featuredImagePreview}
+                      alt="Featured preview"
+                      maxH="280px"
+                      objectFit="cover"
+                      borderRadius="4px"
+                    />
+                    <IconButton
+                      aria-label="Remove image"
+                      icon={<X size={16} />}
+                      size="sm"
+                      position="absolute"
+                      top={2}
+                      right={2}
+                      borderRadius="full"
+                      bg="red.500"
+                      color="white"
+                      onClick={removeFeaturedImage}
+                      _hover={{ bg: "red.600" }}
+                    />
+                  </>
+                ) : (
+                  <>
+                    <CloudUpload size={48} color="#A0AEC0" />
+                    <Text fontSize="14px" color="gray.500" mt={3}>
+                      Upload your imaage here
+                    </Text>
+                    <Text fontSize="12px" color="gray.400">
+                      jpeg,png
+                    </Text>
+                    <Button
+                      size="sm"
+                      mt={4}
+                      bg="#A70B1C"
+                      color="white"
+                      _hover={{ bg: "#8A0916" }}
+                      onClick={() => featuredImageInputRef.current?.click()}
+                      borderRadius="sm"
+                      px={4}
+                    >
+                      Browse
+                    </Button>
+                  </>
+                )}
+                <input
+                  ref={featuredImageInputRef}
+                  type="file"
+                  accept="image/*"
+                  style={{ display: "none" }}
+                  onChange={handleFeaturedImageUpload}
+                />
+              </Box>
+            </FormControl>
+          </VStack>
+        </GridItem>
+        <GridItem colSpan={2}>
           {/* Blog Introduction */}
           <FormControl isRequired>
             <FormLabel fontSize="14px" fontWeight="600">
@@ -349,245 +431,173 @@ export default function CreateBlogPage() {
               minH="150px"
             />
           </FormControl>
-
-          {/* Sections */}
-          {sections.map((section, index) => (
-            <Box
-              key={section._key}
-              p={6}
-              bg="white"
-              borderRadius="8px"
-              border="1px solid"
-              borderColor="gray.200"
-            >
-              <HStack justify="space-between" mb={4}>
-                <Heading size="sm" fontWeight="600">
-                  Section {index + 1}
-                </Heading>
-                {sections.length > 1 && (
-                  <Button
-                    size="sm"
-                    variant="ghost"
-                    color="red.500"
-                    onClick={() => handleRemoveSection(index)}
-                  >
-                    Remove
-                  </Button>
-                )}
-              </HStack>
-
-              <Grid templateColumns={["1fr", "1fr", "1fr 280px"]} gap={4}>
-                <VStack align="stretch" spacing={4}>
-                  {/* Section Header */}
-                  <FormControl isRequired>
-                    <FormLabel fontSize="14px" fontWeight="600">
-                      Header
-                    </FormLabel>
-                    <Input
-                      value={section.header}
-                      onChange={(e) =>
-                        handleSectionChange(index, "header", e.target.value)
-                      }
-                      placeholder="How to Write a professional CV"
-                      bg="white"
-                      borderColor="gray.200"
-                    />
-                  </FormControl>
-
-                  {/* Section Body */}
-                  <FormControl isRequired>
-                    <FormLabel fontSize="14px" fontWeight="600">
-                      Body
-                    </FormLabel>
-                    <Textarea
-                      value={section.body}
-                      onChange={(e) =>
-                        handleSectionChange(index, "body", e.target.value)
-                      }
-                      placeholder="Enter section content..."
-                      bg="white"
-                      borderColor="gray.200"
-                      minH="120px"
-                    />
-                  </FormControl>
-                </VStack>
-
-                {/* Section Featured Image */}
-                <FormControl>
-                  <FormLabel fontSize="14px" fontWeight="600">
-                    Featured Image
-                  </FormLabel>
-                  <Box
-                    border="1px solid"
-                    borderColor="gray.300"
-                    borderRadius="8px"
-                    p={4}
-                    textAlign="center"
-                    bg="gray.50"
-                    position="relative"
-                    minH="200px"
-                    display="flex"
-                    flexDirection="column"
-                    alignItems="center"
-                    justifyContent="center"
-                  >
-                    {section.featuredImage?.preview ? (
-                      <>
-                        <Image
-                          src={section.featuredImage.preview}
-                          alt="Section preview"
-                          maxH="180px"
-                          objectFit="cover"
-                          borderRadius="4px"
-                        />
-                        <IconButton
-                          aria-label="Remove image"
-                          icon={<X size={16} />}
-                          size="sm"
-                          position="absolute"
-                          top={2}
-                          right={2}
-                          borderRadius="full"
-                          bg="red.500"
-                          color="white"
-                          onClick={() => removeSectionImage(index)}
-                          _hover={{ bg: "red.600" }}
-                        />
-                      </>
-                    ) : (
-                      <>
-                        <CloudUpload size={32} color="#A0AEC0" />
-                        <Text fontSize="12px" color="gray.500" mt={2}>
-                          Upload your media here
-                        </Text>
-                        <Text fontSize="11px" color="gray.400">
-                          jpeg,png
-                        </Text>
-                        <Button
-                          size="sm"
-                          mt={3}
-                          bg="#A70B1C"
-                          color="white"
-                          _hover={{ bg: "#8A0916" }}
-                          onClick={() => {
-                            const input = document.createElement("input");
-                            input.type = "file";
-                            input.accept = "image/*";
-                            input.onchange = (e: any) =>
-                              handleSectionImageUpload(index, e);
-                            input.click();
-                          }}
-                        >
-                          Browse
-                        </Button>
-                      </>
-                    )}
-                    <input
-                      ref={(el) => {
-                        sectionImageInputRefs.current[section._key] = el;
-                      }}
-                      type="file"
-                      accept="image/*"
-                      style={{ display: "none" }}
-                      onChange={(e) => handleSectionImageUpload(index, e)}
-                    />
-                  </Box>
-                </FormControl>
-              </Grid>
-            </Box>
-          ))}
-
-          {/* Add Section Button */}
-          <Button
-            leftIcon={<Plus size={18} />}
-            variant="outline"
-            borderColor="#A70B1C"
-            color="#A70B1C"
-            onClick={handleAddSection}
-            _hover={{ bg: "#A70B1C0A" }}
-          >
-            Add new section
-          </Button>
-        </VStack>
-
-        {/* Right Column - Featured Image */}
-        <VStack align="stretch" spacing={4}>
-          <FormControl>
-            <FormLabel fontSize="14px" fontWeight="600">
-              Featured Image
-            </FormLabel>
-            <Box
-              border="2px dashed"
-              borderColor="gray.300"
-              borderRadius="8px"
-              p={6}
-              textAlign="center"
-              bg="gray.50"
-              position="relative"
-              minH="300px"
-              display="flex"
-              flexDirection="column"
-              alignItems="center"
-              justifyContent="center"
-            >
-              {featuredImagePreview ? (
-                <>
-                  <Image
-                    src={featuredImagePreview}
-                    alt="Featured preview"
-                    maxH="280px"
-                    objectFit="cover"
-                    borderRadius="4px"
-                  />
-                  <IconButton
-                    aria-label="Remove image"
-                    icon={<X size={16} />}
-                    size="sm"
-                    position="absolute"
-                    top={2}
-                    right={2}
-                    borderRadius="full"
-                    bg="red.500"
-                    color="white"
-                    onClick={removeFeaturedImage}
-                    _hover={{ bg: "red.600" }}
-                  />
-                </>
-              ) : (
-                <>
-                  <CloudUpload size={48} color="#A0AEC0" />
-                  <Text fontSize="14px" color="gray.500" mt={3}>
-                    Upload your media here
-                  </Text>
-                  <Text fontSize="12px" color="gray.400">
-                    jpeg,png
-                  </Text>
-                  <Button
-                    size="md"
-                    mt={4}
-                    bg="#A70B1C"
-                    color="white"
-                    _hover={{ bg: "#8A0916" }}
-                    onClick={() => featuredImageInputRef.current?.click()}
-                  >
-                    Browse
-                  </Button>
-                </>
-              )}
-              <input
-                ref={featuredImageInputRef}
-                type="file"
-                accept="image/*"
-                style={{ display: "none" }}
-                onChange={handleFeaturedImageUpload}
-              />
-            </Box>
-          </FormControl>
-        </VStack>
+        </GridItem>
       </Grid>
 
+      <VStack align="stretch" spacing={6}>
+        {/* Sections */}
+        {sections.map((section, index) => (
+          <Box key={section._key} mt={6} bg="white" borderRadius="8px">
+            <HStack
+              justify="space-between"
+              mb={4}
+              borderBottom="1px solid"
+              borderColor="gray.200"
+              pb={4}
+            >
+              <Heading size="sm" fontWeight="600">
+                Section {index + 1}
+              </Heading>
+              {sections.length > 1 && (
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  color="red.500"
+                  onClick={() => handleRemoveSection(index)}
+                >
+                  Remove
+                </Button>
+              )}
+            </HStack>
+
+            <Grid templateColumns={["1fr", "1fr", "1fr 1fr"]} gap={4}>
+              <VStack align="stretch" spacing={4}>
+                {/* Section Header */}
+                <FormControl isRequired>
+                  <FormLabel fontSize="14px" fontWeight="600">
+                    Header
+                  </FormLabel>
+                  <Input
+                    value={section.header}
+                    onChange={(e) =>
+                      handleSectionChange(index, "header", e.target.value)
+                    }
+                    placeholder="How to Write a professional CV"
+                    bg="white"
+                    borderColor="gray.200"
+                  />
+                </FormControl>
+
+                {/* Section Body */}
+                <FormControl isRequired>
+                  <FormLabel fontSize="14px" fontWeight="600">
+                    Body
+                  </FormLabel>
+                  <Textarea
+                    value={section.body}
+                    onChange={(e) =>
+                      handleSectionChange(index, "body", e.target.value)
+                    }
+                    placeholder="Enter section content..."
+                    bg="white"
+                    borderColor="gray.200"
+                    minH="120px"
+                  />
+                </FormControl>
+              </VStack>
+
+              {/* Section Featured Image */}
+              <FormControl>
+                <FormLabel fontSize="14px" fontWeight="600">
+                  Featured Image
+                </FormLabel>
+                <Box
+                  border="1px solid"
+                  borderColor="gray.300"
+                  borderRadius="8px"
+                  p={4}
+                  textAlign="center"
+                  bg="gray.50"
+                  position="relative"
+                  minH="200px"
+                  display="flex"
+                  flexDirection="column"
+                  alignItems="center"
+                  justifyContent="center"
+                >
+                  {section.featuredImage?.preview ? (
+                    <>
+                      <Image
+                        src={section.featuredImage.preview}
+                        alt="Section preview"
+                        maxH="180px"
+                        objectFit="cover"
+                        borderRadius="4px"
+                      />
+                      <IconButton
+                        aria-label="Remove image"
+                        icon={<X size={16} />}
+                        size="sm"
+                        position="absolute"
+                        top={2}
+                        right={2}
+                        borderRadius="full"
+                        bg="red.500"
+                        color="white"
+                        onClick={() => removeSectionImage(index)}
+                        _hover={{ bg: "red.600" }}
+                      />
+                    </>
+                  ) : (
+                    <>
+                      <CloudUpload size={32} color="#A0AEC0" />
+                      <Text fontSize="12px" color="gray.500" mt={2}>
+                        Upload your image here
+                      </Text>
+                      <Text fontSize="11px" color="gray.400">
+                        jpeg,png
+                      </Text>
+                      <Button
+                        size="sm"
+                        borderRadius="sm"
+                        px={4}
+                        mt={3}
+                        bg="#A70B1C"
+                        color="white"
+                        _hover={{ bg: "#8A0916" }}
+                        onClick={() => {
+                          const input = document.createElement("input");
+                          input.type = "file";
+                          input.accept = "image/*";
+                          input.onchange = (e: any) =>
+                            handleSectionImageUpload(index, e);
+                          input.click();
+                        }}
+                      >
+                        Browse
+                      </Button>
+                    </>
+                  )}
+                  <input
+                    ref={(el) => {
+                      sectionImageInputRefs.current[section._key] = el;
+                    }}
+                    type="file"
+                    accept="image/*"
+                    style={{ display: "none" }}
+                    onChange={(e) => handleSectionImageUpload(index, e)}
+                  />
+                </Box>
+              </FormControl>
+            </Grid>
+          </Box>
+        ))}
+      </VStack>
+
       {/* Publish Button */}
-      <Flex justify="flex-end" mt={6}>
+      <Flex justify="flex-start" mt={0} gap={4}>
+        {/* Add Section Button */}
+        <CustomButton
+          rightIcon={<Plus size={18} />}
+          variant="outline"
+          borderColor="#A70B1C"
+          color="#A70B1C"
+          onClick={handleAddSection}
+          _hover={{ bg: "#A70B1C0A" }}
+          text="Add new section"
+          borderRadius={"sm"}
+          px={6}
+        />
         <CustomButton
           colorScheme="brand"
           onClick={handleSubmit}
