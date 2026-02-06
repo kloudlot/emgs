@@ -18,14 +18,14 @@ import CouponCard from "@/components/coupon-card";
 import EmptyCouponState from "@/components/empty-coupon-state";
 import DeleteCouponModal from "@/components/delete-coupon-modal";
 import CreateCouponModal from "@/components/create-coupon-modal";
+import EditCouponModal from "@/components/edit-coupon-modal";
 import CustomButton from "@/components/custom-button";
-import { useRouter } from "next/navigation";
 
 export default function AffiliateCouponsPage() {
-  const router = useRouter();
   const toast = useToast();
   const { isOpen: isDeleteOpen, onOpen: onDeleteOpen, onClose: onDeleteClose } = useDisclosure();
   const { isOpen: isCreateOpen, onOpen: onCreateOpen, onClose: onCreateClose } = useDisclosure();
+  const { isOpen: isEditOpen, onOpen: onEditOpen, onClose: onEditClose } = useDisclosure();
   
   const [coupons, setCoupons] = useState<Coupon[]>([]);
   const [loading, setLoading] = useState(true);
@@ -68,7 +68,8 @@ export default function AffiliateCouponsPage() {
   };
 
   const handleEdit = (coupon: Coupon) => {
-    router.push(`/admin/affiliate-coupons/edit/${coupon.id}`);
+    setSelectedCoupon(coupon);
+    onEditOpen();
   };
 
   const handleDeleteClick = (coupon: Coupon) => {
@@ -176,6 +177,14 @@ export default function AffiliateCouponsPage() {
         isOpen={isCreateOpen}
         onClose={onCreateClose}
         onSuccess={fetchCoupons}
+      />
+
+      {/* Edit Modal */}
+      <EditCouponModal
+        isOpen={isEditOpen}
+        onClose={onEditClose}
+        onSuccess={fetchCoupons}
+        coupon={selectedCoupon}
       />
 
       {/* Delete Modal */}
