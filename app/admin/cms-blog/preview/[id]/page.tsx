@@ -23,6 +23,7 @@ import {
 import { useState, useEffect, use } from "react";
 import { useRouter } from "next/navigation";
 import { getImageUrl } from "@/lib/sanity/image.service";
+import BackButton from "@/components/back-button";
 
 interface BlogSection {
   _key: string;
@@ -123,20 +124,14 @@ export default function PreviewBlogPage({ params }: { params: Promise<{ id: stri
     <VStack align="stretch" spacing={8}>
       {/* Header Actions */}
       <HStack justify="space-between">
+        <BackButton />
         <Button
-          leftIcon={<ArrowLeft size={20} />}
-          variant="ghost"
-          onClick={() => router.back()}
-          fontWeight="500"
-        >
-          Go back
-        </Button>
-        <Button
-          leftIcon={<Edit size={20} />}
-          colorScheme="red"
-          bg="#A70B1C"
+          leftIcon={<Edit size={18} />}
+          colorScheme="brand"
           onClick={() => router.push(`/admin/cms-blog/edit/${id}`)}
-          _hover={{ bg: "#8A0916" }}
+          size="sm"
+          borderRadius={"sm"}
+          px={4}
         >
           Edit Blog
         </Button>
@@ -245,26 +240,6 @@ export default function PreviewBlogPage({ params }: { params: Promise<{ id: stri
         )}
       </Box>
 
-      {/* Footer Actions */}
-      <HStack justify="space-between">
-        <Button
-          leftIcon={<ArrowLeft size={20} />}
-          variant="ghost"
-          onClick={() => router.back()}
-          fontWeight="500"
-        >
-          Go back
-        </Button>
-        <Button
-          leftIcon={<Edit size={20} />}
-          colorScheme="red"
-          bg="#A70B1C"
-          onClick={() => router.push(`/admin/cms-blog/edit/${id}`)}
-          _hover={{ bg: "#8A0916" }}
-        >
-          Edit Blog
-        </Button>
-      </HStack>
     </VStack>
   );
 }

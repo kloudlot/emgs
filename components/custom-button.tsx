@@ -1,6 +1,5 @@
 import { Button, ButtonProps } from "@chakra-ui/react";
 
-
 interface CustomButtonProps extends ButtonProps {
   text: string;
   onClick?: () => void;
@@ -18,6 +17,7 @@ const CustomButton = ({ text, onClick, ...props }: CustomButtonProps) => {
         bg: "brand.600",
         transform: "translateY(-2px)",
         boxShadow: "xl",
+        ...(props.variant === "outline" ? { _hover: { bg: "initial" } } : {}),
       }}
       transition={"all 0.3s"}
       onClick={onClick}
