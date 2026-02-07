@@ -38,7 +38,7 @@ export function UpdatePasswordForm(props: React.ComponentPropsWithoutRef<"div">)
     try {
       const { error } = await supabase.auth.updateUser({ password: data.password });
       if (error) throw error;
-      router.push("/protected");
+      router.push("/dashboard");
     } catch (error: unknown) {
       setError(error instanceof Error ? error.message : "An error occurred");
     } finally {

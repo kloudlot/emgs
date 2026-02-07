@@ -34,26 +34,6 @@ const FooterNav = () => {
                   height="40px"
                   objectFit="contain"
                 />
-                <VStack align="flex-start" spacing={0}>
-                  <Text
-                    fontSize="10px"
-                    fontWeight="bold"
-                    lineHeight="1"
-                    color="brand.500"
-                    textTransform="uppercase"
-                  >
-                    Express Med
-                  </Text>
-                  <Text
-                    fontSize="10px"
-                    fontWeight="bold"
-                    lineHeight="1"
-                    color="brand.500"
-                    textTransform="uppercase"
-                  >
-                    Global Services
-                  </Text>
-                </VStack>
               </HStack>
             </Link>
           </Box>

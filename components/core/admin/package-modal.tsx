@@ -293,16 +293,16 @@ export default function PackageModal({
                         value={feature.feature}
                         onChange={(e) => handleFeatureChange(index, "feature", e.target.value)}
                         placeholder="e.g., Speaking coaching sessions"
-                        size="sm"
+                        size="md"
                         flex={2}
                       />
-                      <Input
+                      {/* <Input
                         value={feature.quantity || ""}
                         onChange={(e) => handleFeatureChange(index, "quantity", e.target.value)}
                         placeholder="Qty (e.g., 2)"
                         size="sm"
                         flex={1}
-                      />
+                      /> */}
                       <IconButton
                         aria-label="Remove option"
                         icon={<Trash2 size={16} />}
@@ -324,6 +324,9 @@ export default function PackageModal({
                   alignSelf="flex-start"
                   fontWeight={400}
                   fontSize={"13px"}
+                  _hover={{
+                    textDecoration: "none",
+                  }}
                 >
                   Add New Option
                 </Button>
@@ -360,10 +363,11 @@ export default function PackageModal({
 
             {/* Submit Button */}
             <Button
-              colorScheme="red"
+              colorScheme="brand"
               w="full"
               onClick={handleSubmit}
               isDisabled={!formData.name || !formData.price}
+              size="md"
             >
               {editData ? "Update Package" : "Add Package"}
             </Button>

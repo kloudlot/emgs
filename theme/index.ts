@@ -57,13 +57,13 @@ const theme = extendTheme({
     },
     Input: {
       defaultProps: {
-        focusBorderColor: "brand.500",
+        focusBorderColor: "brand.400",
       },
       variants: {
         outline: {
           field: {
             _focus: {
-              borderColor: "brand.500",
+              borderColor: "brand.400",
               boxShadow: "none",
             },
             _hover: {
@@ -74,7 +74,7 @@ const theme = extendTheme({
         filled: {
           field: {
             _focus: {
-              borderColor: "brand.500",
+              borderColor: "brand.400",
               boxShadow: "none",
             },
             _hover: {
@@ -97,13 +97,68 @@ const theme = extendTheme({
     },
     FormLabel: {
       baseStyle: {
-        color: "gray.700",
+        color: "#718096",
+        fontSize: "16px",
         _dark: {
           color: "gray.300",
         },
         fontWeight: "medium",
       },
     },
+      Select: {
+        baseStyle: {
+          field: {
+            autocomplete: 'off',
+          },
+        },
+        variants: {
+          filled: {
+            field: {
+              bg: 'gray.50',
+              _hover: {
+                bg: 'gray.100',
+              },
+              _focus: {
+                bg: 'white',
+                borderColor: 'brand.500',
+                boxShadow: `0 0 0 1px var(--chakra-colors-brand-500)`,
+              },
+            },
+          },
+          outline: {
+            field: {
+              _focus: {
+                borderColor: 'brand.500',
+                boxShadow: `0 0 0 1px var(--chakra-colors-brand-500)`,
+              },
+            },
+          },
+        },
+      },
+      Textarea: {
+        baseStyle: {
+          autocomplete: 'off',
+        },
+        variants: {
+          filled: {
+            bg: 'gray.50',
+            _hover: {
+              bg: 'gray.100',
+            },
+            _focus: {
+              bg: 'white',
+              borderColor: 'brand.400',
+              boxShadow: `none`,
+            },
+          },
+          outline: {
+            _focus: {
+              borderColor: 'brand.400',
+              boxShadow: `none`,
+            },
+          },
+        },
+      },
   },
 });
 

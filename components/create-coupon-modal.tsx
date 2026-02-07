@@ -15,9 +15,14 @@ import {
   Grid,
   GridItem,
   HStack,
+  VStack,
+  InputGroup,
+  InputRightAddon,
+  Button,
 } from "@chakra-ui/react";
 import { useState } from "react";
 import CustomButton from "./custom-button";
+import { Shuffle } from "lucide-react";
 
 interface CreateCouponModalProps {
   isOpen: boolean;
@@ -43,7 +48,7 @@ export default function CreateCouponModal({
   });
 
   const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -198,146 +203,148 @@ export default function CreateCouponModal({
     onClose();
   };
 
+  const generateCouponCode = () => {
+    const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    let code = "";
+    for (let i = 0; i < 6; i++) {
+      const randomIndex = Math.floor(Math.random() * characters.length);
+      code += characters.charAt(randomIndex);
+    }
+    setFormData((prev) => ({ ...prev, code }));
+  };
+
   return (
-    <Modal isOpen={isOpen} onClose={handleClose} size="3xl" isCentered>
+    <Modal isOpen={isOpen} onClose={handleClose} isCentered>
       <ModalOverlay bg="blackAlpha.600" />
-      <ModalContent borderRadius="16px" maxW="800px">
+      <ModalContent borderRadius="16px">
         <ModalHeader fontSize="20px" fontWeight="600" pt={6}>
           Create New Coupon
         </ModalHeader>
         <ModalCloseButton />
 
         <ModalBody pb={6}>
-          <Grid templateColumns={["1fr", "1fr", "1fr 1fr"]} gap={4}>
-            {/* Coupon Code */}
-            <GridItem>
-              <FormControl isRequired>
-                <FormLabel fontSize="14px" fontWeight="600">
-                  Coupon Code
-                </FormLabel>
+          <VStack spacing={6}>
+            <FormControl isRequired>
+              <FormLabel fontSize="14px" fontWeight="600">
+                Coupon Code
+              </FormLabel>
+              <InputGroup>
                 <Input
                   name="code"
                   value={formData.code}
                   onChange={handleInputChange}
-                  placeholder="AFRI20"
+                  placeholder="Enter Code"
                   bg="white"
                   borderColor="gray.200"
                   textTransform="uppercase"
                 />
-              </FormControl>
-            </GridItem>
+                <InputRightAddon overflow={"hidden"} px={0}>
+                  <Button
+                    mr={1}
+                    borderRadius={"sm"}
+                    h={"90%"}
+                    my={1}
+                    rightIcon={<Shuffle size={20} />}
+                    onClick={generateCouponCode}
+                  >
+                    Generate
+                  </Button>
+                </InputRightAddon>
+              </InputGroup>
+            </FormControl>
 
-            {/* Discount Type */}
-            <GridItem>
-              <FormControl isRequired>
-                <FormLabel fontSize="14px" fontWeight="600">
-                  Discount Type
-                </FormLabel>
-                <Select
-                  name="discount_type"
-                  value={formData.discount_type}
-                  onChange={handleInputChange}
-                  bg="white"
-                  borderColor="gray.200"
-                >
-                  <option value="percentage">Percentage</option>
-                  <option value="fixed">Fixed Amount</option>
-                </Select>
-              </FormControl>
-            </GridItem>
+            <FormControl isRequired>
+              <FormLabel fontSize="14px" fontWeight="600">
+                Discount Type
+              </FormLabel>
+              <Select
+                name="discount_type"
+                value={formData.discount_type}
+                onChange={handleInputChange}
+                bg="white"
+                borderColor="gray.200"
+              >
+                <option value="percentage">Percentage</option>
+                <option value="fixed">Fixed Amount</option>
+              </Select>
+            </FormControl>
+            <FormControl isRequired>
+              <FormLabel fontSize="14px" fontWeight="600">
+                Amount/Percentage
+              </FormLabel>
+              <Input
+                name="discount_value"
+                type="number"
+                value={formData.discount_value}
+                onChange={handleInputChange}
+                placeholder={
+                  formData.discount_type === "percentage" ? "20" : "10.00"
+                }
+                bg="white"
+                borderColor="gray.200"
+                min="0"
+                step={formData.discount_type === "percentage" ? "1" : "0.01"}
+              />
+            </FormControl>
+       
 
-            {/* Discount Value */}
-            <GridItem>
-              <FormControl isRequired>
-                <FormLabel fontSize="14px" fontWeight="600">
-                  Discount Value
-                </FormLabel>
-                <Input
-                  name="discount_value"
-                  type="number"
-                  value={formData.discount_value}
-                  onChange={handleInputChange}
-                  placeholder={
-                    formData.discount_type === "percentage" ? "20" : "10.00"
-                  }
-                  bg="white"
-                  borderColor="gray.200"
-                  min="0"
-                  step={formData.discount_type === "percentage" ? "1" : "0.01"}
-                />
-              </FormControl>
-            </GridItem>
+            <FormControl isRequired>
+              <FormLabel fontSize="14px" fontWeight="600">
+                Maximum Use Count
+              </FormLabel>
+              <Input
+                name="maximum_use_count"
+                type="number"
+                value={formData.maximum_use_count}
+                onChange={handleInputChange}
+                placeholder="100"
+                bg="white"
+                borderColor="gray.200"
+                min="1"
+              />
+            </FormControl>
 
-            {/* Expire Date */}
-            <GridItem>
-              <FormControl isRequired>
-                <FormLabel fontSize="14px" fontWeight="600">
-                  Expire Date
-                </FormLabel>
-                <Input
-                  name="expire_date"
-                  type="date"
-                  value={formData.expire_date}
-                  onChange={handleInputChange}
-                  bg="white"
-                  borderColor="gray.200"
-                />
-              </FormControl>
-            </GridItem>
+                 <FormControl isRequired>
+              <FormLabel fontSize="14px" fontWeight="600">
+                Expire Date
+              </FormLabel>
+              <Input
+                name="expire_date"
+                type="date"
+                value={formData.expire_date}
+                onChange={handleInputChange}
+                bg="white"
+                borderColor="gray.200"
+              />
+            </FormControl>
 
-            {/* Maximum Use Count */}
-            <GridItem>
-              <FormControl isRequired>
-                <FormLabel fontSize="14px" fontWeight="600">
-                  Maximum Use Count
-                </FormLabel>
-                <Input
-                  name="maximum_use_count"
-                  type="number"
-                  value={formData.maximum_use_count}
-                  onChange={handleInputChange}
-                  placeholder="100"
-                  bg="white"
-                  borderColor="gray.200"
-                  min="1"
-                />
-              </FormControl>
-            </GridItem>
-
-            {/* Is Active */}
-            <GridItem>
-              <FormControl display="flex" alignItems="center" h="full">
-                <FormLabel fontSize="14px" fontWeight="600" mb={0}>
-                  Active Status
-                </FormLabel>
-                <Switch
-                  isChecked={formData.is_active}
-                  onChange={handleSwitchChange}
-                  colorScheme="green"
-                  size="lg"
-                />
-              </FormControl>
-            </GridItem>
-          </Grid>
+            {/* <FormControl display="flex" alignItems="center" h="full">
+              <FormLabel fontSize="14px" fontWeight="600" mb={0}>
+                Active Status
+              </FormLabel>
+              <Switch
+                isChecked={formData.is_active}
+                onChange={handleSwitchChange}
+                colorScheme="green"
+                size="lg"
+              />
+            </FormControl> */}
+          </VStack>
 
           {/* Submit Button */}
-          <HStack justify="flex-end" mt={6}>
-            <CustomButton
-              text="Cancel"
-              variant="ghost"
-              onClick={handleClose}
-              isDisabled={loading}
-            />
+          <HStack  mt={6}>
             <CustomButton
               text="Create Coupon"
               colorScheme="brand"
-              bg="#A70B1C"
+              // bg="#A70B1C"
               onClick={handleSubmit}
               isLoading={loading}
               loadingText="Creating..."
               px={6}
-              borderRadius="sm"
-              _hover={{ bg: "#8A0916" }}
+              borderRadius="md"
+              // _hover={{ bg: "#8A0916" }}
+              w={"full"}
+              fontWeight={400}
             />
           </HStack>
         </ModalBody>

@@ -20,7 +20,7 @@ export function HeaderAuth() {
   return (
     <HStack spacing={3}>
       {user ? (
-        <Link href="/protected" passHref legacyBehavior>
+        <Link href="/dashboard" passHref legacyBehavior>
           <Button
             as={ChakraLink}
             variant="ghost"
