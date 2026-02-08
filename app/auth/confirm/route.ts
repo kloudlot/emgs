@@ -17,6 +17,33 @@ export async function GET(request: NextRequest) {
       token_hash,
     });
     if (!error) {
+      // Ensure user profile exists (fallback if trigger failed)
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      if (user) {
+        // Check if profile exists
+        const { data: existingProfile } = await supabase
+          .from("user_profiles")
+          .select("id")
+          .eq("id", user.id)
+          .maybeSingle();
+
+        // Create profile if it doesn't exist
+        if (!existingProfile) {
+          await supabase.from("user_profiles").insert({
+            id: user.id,
+            full_name: user.user_metadata?.full_name || null,
+            phone_number: user.user_metadata?.phone_number || null,
+            referral_code: Math.random()
+              .toString(36)
+              .substring(2, 10)
+              .toUpperCase(),
+          });
+        }
+      }
+
       // redirect user to specified redirect URL or root of app
       redirect(next);
     } else {
